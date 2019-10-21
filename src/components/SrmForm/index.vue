@@ -9,40 +9,42 @@
     :label-width="labelWitdh"
     class="srm-form"
   >
-    <template v-for="(item, index) in _formItems">
-      <div
-        :key="index + item.attrs.key || item.slot"
-        :style="{display: 'inline-block', width: `${item.itemAttrs.width}px`}"
-      >
-        <el-form-item
-          v-if="item._ifRender"
+    <el-row>
+      <template v-for="(item, index) in _formItems">
+        <el-col
           :key="index + item.attrs.key || item.slot"
-          v-bind="item.itemAttrs || {}"
-          :prop="item.attrs.key"
+          :span="item.itemAttrs.col || 24"
+          :style="{'min-width': item.itemAttrs.minWidth +'px', 'max-width': item.itemAttrs.maxWidth + 'px'}"
         >
-          <!-- 将表单内部的数据通过作用域插槽传给外部 -->
-          <slot v-if="item.slot" :name="item.slot" :scope="Model" />
-          <component
-            :is="item.tag"
-            v-else
-            v-model="Model[item.attrs.key]"
-            :size="size"
-            v-bind="item.attrs || {}"
-            v-on="item.listeners || {}"
-          />
+          <el-form-item
+            v-if="item._ifRender"
+            :key="index + item.attrs.key || item.slot"
+            v-bind="item.itemAttrs || {}"
+            :prop="item.attrs.key"
+          >
+            <!-- 将表单内部的数据通过作用域插槽传给外部 -->
+            <slot v-if="item.slot" :name="item.slot" :scope="Model" />
+            <component
+              :is="item.tag"
+              v-else
+              v-model="Model[item.attrs.key]"
+              :size="size"
+              v-bind="item.attrs || {}"
+              v-on="item.listeners || {}"
+            />
+          </el-form-item>
+        </el-col>
+      </template>
+      <el-col :span="btnCol">
+        <el-form-item v-if="submitMsg || resetMsg">
+          <el-button v-if="!!submitMsg" @click="handleSubmit">{{ submitMsg }}</el-button>
+          <el-button v-if="resetMsg" @click="handleReset">{{ resetMsg }}</el-button>
+          <!-- <el-button v-if="showBack" :disabled="false" @click="goBack">返回</el-button> -->
+          <span v-if="showBack" class="el-button el-button--small" @click="goBack">返回</span>
         </el-form-item>
-      </div>
-    </template>
-    <div style="display: inline-block">
-      <el-form-item v-if="submit || reset">
-        <el-button v-if="submit" @click="handleSubmit">{{
-          $attrs.submitContext || "提交"
-        }}</el-button>
-        <el-button v-if="reset" @click="handleReset">{{
-          $attrs.resetContext || "重置"
-        }}</el-button>
-      </el-form-item>
-    </div>
+      </el-col>
+
+    </el-row>
     <!-- :class="item.itemAttrs.className" -->
   </el-form>
 </template>
@@ -76,13 +78,13 @@ export default {
       type: Array,
       required: true
     },
-    submit: {
-      type: Boolean,
-      default: true
+    submitMsg: {
+      type: [Boolean, String],
+      default: '提交'
     },
-    reset: {
-      type: Boolean,
-      default: true
+    resetMsg: {
+      type: [Boolean, String],
+      default: '重置'
     },
     labelWitdh: {
       type: String,
@@ -96,6 +98,14 @@ export default {
     size: {
       type: String,
       default: 'small'
+    },
+    showBack: {
+      type: Boolean,
+      default: true
+    },
+    btnCol: {
+      type: Number,
+      default: 24
     }
   },
   data() {
@@ -214,6 +224,12 @@ export default {
       this.Model = JSON.parse(JSON.stringify(this.originModel))
       this.$emit('update:merge-form', this.Model)
       this.$emit('after-reset')
+    },
+    goBack() {
+      // this.$router.push({ path: '/brand/list', params: {
+      //   refresh: true
+      // }})
+      this.$router.go(-1)
     }
   }
 }
