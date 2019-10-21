@@ -9,43 +9,40 @@
     :label-width="labelWitdh"
     class="srm-form"
   >
-    <el-row>
-      <template v-for="(item, index) in _formItems">
-        <el-col
+    <template v-for="(item, index) in _formItems">
+      <div
+        :key="index + item.attrs.key || item.slot"
+        :style="{display: 'inline-block', width: `${item.itemAttrs.width}px`}"
+      >
+        <el-form-item
+          v-if="item._ifRender"
           :key="index + item.attrs.key || item.slot"
-          :span="item.itemAttrs.col || 24"
+          v-bind="item.itemAttrs || {}"
+          :prop="item.attrs.key"
         >
-          <el-form-item
-            v-if="item._ifRender"
-            :key="index + item.attrs.key || item.slot"
-            v-bind="item.itemAttrs || {}"
-            :prop="item.attrs.key"
-          >
-            <!-- 将表单内部的数据通过作用域插槽传给外部 -->
-            <slot v-if="item.slot" :name="item.slot" :scope="Model" />
-            <component
-              :is="item.tag"
-              v-else
-              v-model="Model[item.attrs.key]"
-              :size="size"
-              v-bind="item.attrs || {}"
-              v-on="item.listeners || {}"
-            />
-          </el-form-item>
-        </el-col>
-      </template>
-      <el-col :span="4">
-        <el-form-item v-if="submit || reset">
-          <el-button v-if="submit" @click="handleSubmit">{{
-            $attrs.submitContext || "提交"
-          }}</el-button>
-          <el-button v-if="reset" @click="handleReset">{{
-            $attrs.resetContext || "重置"
-          }}</el-button>
+          <!-- 将表单内部的数据通过作用域插槽传给外部 -->
+          <slot v-if="item.slot" :name="item.slot" :scope="Model" />
+          <component
+            :is="item.tag"
+            v-else
+            v-model="Model[item.attrs.key]"
+            :size="size"
+            v-bind="item.attrs || {}"
+            v-on="item.listeners || {}"
+          />
         </el-form-item>
-      </el-col>
-
-    </el-row>
+      </div>
+    </template>
+    <div style="display: inline-block">
+      <el-form-item v-if="submit || reset">
+        <el-button v-if="submit" @click="handleSubmit">{{
+          $attrs.submitContext || "提交"
+        }}</el-button>
+        <el-button v-if="reset" @click="handleReset">{{
+          $attrs.resetContext || "重置"
+        }}</el-button>
+      </el-form-item>
+    </div>
     <!-- :class="item.itemAttrs.className" -->
   </el-form>
 </template>
