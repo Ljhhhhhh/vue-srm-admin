@@ -14,7 +14,7 @@
         <el-col
           :key="index + item.attrs.key || item.slot"
           :span="item.itemAttrs.col || 24"
-          :style="{'min-width': item.itemAttrs.minWidth +'px', 'max-width': item.itemAttrs.maxWidth + 'px'}"
+          :style="{'min-width': item.itemAttrs.width +'px', 'max-width': item.itemAttrs.width + 'px'}"
         >
           <el-form-item
             v-if="item._ifRender"

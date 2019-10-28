@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span class="srm-upload_container">
     <el-upload
       v-if="!$attrs.multiple"
       class="image-uploader"
@@ -10,15 +10,17 @@
       :headers="headers"
       v-bind="$attrs"
     >
-      <img
-        v-if="src"
-        :src="src"
-        class="avatar"
-      >
-      <i
-        v-else
-        class="el-icon-plus avatar-uploader-icon"
-      />
+      <div class="upload-wrap" :style="imgStyle">
+        <img
+          v-if="src"
+          :src="src"
+          class="avatar"
+        >
+        <i
+          v-else
+          class="el-icon-plus avatar-uploader-icon"
+        />
+      </div>
     </el-upload>
     <el-upload
       v-else
@@ -32,6 +34,11 @@
       :on-preview="handlePictureCardPreview"
       :on-remove="handleRemove"
     >
+      <!-- <div class="upload-wrap">
+        <i
+          class="el-icon-plus"
+        />
+      </div> -->
       <i class="el-icon-plus" />
     </el-upload>
     <div
@@ -66,6 +73,10 @@ export default {
       type: [String, Array],
       default: ''
     },
+    imgStyle: {
+      type: Object,
+      default: () => {}
+    },
     showMsg: {
       type: Boolean,
       default: true
@@ -77,19 +88,20 @@ export default {
         platform: setting.platform
       },
       src: '',
-      previewSrc: ''
+      previewSrc: '',
+      fileList: []
     }
   },
   computed: {
-    fileList() {
-      if (this.$attrs.multiple && Array.isArray(this.src)) {
-        return this.src.map((item, idx) => ({
-          name: idx,
-          url: item
-        }))
-      }
-      return []
-    },
+    // fileList() {
+    //   if (this.$attrs.multiple && Array.isArray(this.src)) {
+    //     return this.src.map((item, idx) => ({
+    //       name: idx,
+    //       url: item
+    //     }))
+    //   }
+    //   return []
+    // },
     maxSizeWithUnit() {
       if (this.maxSize > 1024) {
         return (this.maxSize / 1024).toFixed(2) + 'MB'
@@ -97,14 +109,35 @@ export default {
       return this.maxSize + 'KB'
     }
   },
-  watch: {
-    'imageUrl': function() {
-      const src = this.imageUrl || this.$attrs.value
-      if (this.$attrs.multiple) {
-        this.src = Array.isArray(src) ? src : [src]
-      } else {
-        this.src = src
-      }
+  // watch: {
+  //   'imageUrl': {
+  //     handler: function() {
+  //       const src = this.imageUrl || this.$attrs.value
+  //       if (this.$attrs.multiple) {
+  //         // const newSrc = Array.isArray(src) ? src : src ? [src] : []
+  //         this.src = Array.isArray(src) ? src : src ? [src] : []
+  //       } else {
+  //         this.src = src
+  //       }
+  //     },
+  //     immediate: true
+  //   }
+  // },
+  mounted() {
+    const src = this.imageUrl || this.$attrs.value
+    if (this.$attrs.multiple) {
+      // const newSrc = Array.isArray(src) ? src : src ? [src] : []
+      this.src = Array.isArray(src) ? src : src ? [src] : []
+    } else {
+      this.src = src
+    }
+    if (this.$attrs.multiple && Array.isArray(this.src)) {
+      this.fileList = this.src.map((item, idx) => ({
+        name: idx,
+        url: item
+      }))
+    } else {
+      this.fileList = []
     }
   },
   methods: {
@@ -131,11 +164,17 @@ export default {
       return true
     },
     uploadSuccess(response, file, fileList) {
-      console.log(response, '上传成功', fileList, this.$attrs.multiple)
-      const newUrl = response.data.filePath
       if (this.$attrs.multiple) {
-        this.src.push(newUrl)
+        const flag = fileList.every(item => item.response)
+        if (flag) {
+          this.src = fileList.map(item => {
+            if (item.response) {
+              return item.response.data.filePath
+            }
+          })
+        }
       } else {
+        const newUrl = response.data.filePath
         this.src = newUrl
       }
       this.$emit('update', this.src)
@@ -155,16 +194,30 @@ export default {
     line-height: 1;
     font-size: 0;
   }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
+  // .avatar-uploader-icon {
+  //   font-size: 28px;
+  //   color: #8c939d;
+  //   width: 120px;
+  //   height: 120px;
+  //   line-height: 120px;
+  //   text-align: center;
+  // }
+}
+.srm-upload_container /deep/ {
+  .upload-wrap{
     width: 120px;
     height: 120px;
-    line-height: 120px;
-    text-align: center;
+    i, img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px;
+      color: #8c939d;
+    }
   }
 }
-.avatar {
-  width: 120px;
-}
+
 </style>
