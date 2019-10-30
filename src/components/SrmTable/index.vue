@@ -80,6 +80,7 @@
         <el-button
           class="button"
           size="small"
+          v-if="deleteVisible"
           type="danger"
           :disabled="!selections.length"
           icon="el-icon-delete"
@@ -126,6 +127,10 @@ export default {
     total: {
       type: Number,
       required: true
+    },
+    deleteVisible: {
+      type: Boolean,
+      default: true
     },
     // 定义列
     columns: {
