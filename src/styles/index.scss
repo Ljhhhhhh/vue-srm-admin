@@ -3,7 +3,10 @@
 @import './transition.scss';
 @import './element-ui.scss';
 @import './sidebar.scss';
-
+html, body {
+  min-width: 1285px;
+  overflow-x: auto;
+}
 body {
   height: 100%;
   -moz-osx-font-smoothing: grayscale;
@@ -114,3 +117,19 @@ div:focus {
   color: #F56C6C;
   margin-right: 4px;
 }
+
+.h15{
+  width: 1px;
+  height: 15px;
+}
+
+.require-visible /deep/ .el-form-item__label::before {
+  display: none;
+}
+// 不需要数据的表格
+// .no-body_table /deep/ .el-table__body-wrapper {
+//   display: none;
+//   .el-table--small td, .el-table--small th{
+//     padding: 0;
+//   }
+// }

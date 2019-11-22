@@ -39,7 +39,9 @@ export default {
   methods: {
     handleDialog(check) {
       this.$emit('update:visible', false)
-      this.$emit('handleDialog', check)
+      if (check) {
+        this.$emit('handleDialog', check)
+      }
     }
   }
 }

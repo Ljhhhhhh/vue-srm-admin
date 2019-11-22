@@ -11,20 +11,18 @@
       v-bind="$attrs"
     >
       <div class="upload-wrap" :style="imgStyle">
-        <img
-          v-if="src"
-          :src="src"
-          class="avatar"
-        >
+        <component :is="$attrs['is-video'] ? 'video' : 'img'" v-if="src" class="avatar" :src="src" />
         <i
           v-else
           class="el-icon-plus avatar-uploader-icon"
         />
       </div>
     </el-upload>
+    <!--
+      :on-success="uploadSuccess"
+     -->
     <el-upload
       v-else
-      :on-success="uploadSuccess"
       :before-upload="beforeUpload"
       :headers="headers"
       v-bind="$attrs"
@@ -33,6 +31,8 @@
       list-type="picture-card"
       :on-preview="handlePictureCardPreview"
       :on-remove="handleRemove"
+      :on-exceed="onExceed"
+      :on-change="changeImg"
     >
       <!-- <div class="upload-wrap">
         <i
@@ -44,7 +44,7 @@
     <div
       v-if="showMsg"
       class="el-upload__tip"
-    >只能上传{{ ext }}文件，且不超过{{ maxSizeWithUnit }}</div>
+    >只能上传{{ ext }}文件，且不超过{{ maxSizeWithUnit }} <span v-if="$attrs.limit">最多上传{{ $attrs.limit }}张</span> </div>
     <ImagePreview :current-img.sync="previewSrc" />
   </span>
 </template>
@@ -109,43 +109,42 @@ export default {
       return this.maxSize + 'KB'
     }
   },
-  // watch: {
-  //   'imageUrl': {
-  //     handler: function() {
-  //       const src = this.imageUrl || this.$attrs.value
-  //       if (this.$attrs.multiple) {
-  //         // const newSrc = Array.isArray(src) ? src : src ? [src] : []
-  //         this.src = Array.isArray(src) ? src : src ? [src] : []
-  //       } else {
-  //         this.src = src
-  //       }
-  //     },
-  //     immediate: true
-  //   }
-  // },
-  mounted() {
-    const src = this.imageUrl || this.$attrs.value
-    if (this.$attrs.multiple) {
-      // const newSrc = Array.isArray(src) ? src : src ? [src] : []
-      this.src = Array.isArray(src) ? src : src ? [src] : []
-    } else {
-      this.src = src
-    }
-    if (this.$attrs.multiple && Array.isArray(this.src)) {
-      this.fileList = this.src.map((item, idx) => ({
-        name: idx,
-        url: item
-      }))
-    } else {
-      this.fileList = []
+  watch: {
+    'imageUrl': {
+      handler: 'getSrc',
+      immediate: true
     }
   },
   methods: {
+    getSrc() {
+      const src = this.imageUrl || this.$attrs.value
+      if (this.$attrs.multiple) {
+        this.src = Array.isArray(src) ? src : src ? [src] : []
+      } else {
+        this.src = src
+      }
+      if (this.$attrs.multiple && Array.isArray(this.src)) {
+        console.log(this.src, 'src')
+        const list = [...this.src]
+        this.fileList = list.map((item, idx) => ({
+          name: idx,
+          url: item
+        }))
+      } else {
+        this.fileList = []
+      }
+    },
+    onExceed(files) {
+      this.$message({
+        message: `最多上传${this.$attrs.limit}张图片`,
+        type: 'warning'
+      })
+    },
     handlePictureCardPreview(src) {
       this.previewSrc = src.url
     },
     handleRemove(file, fileList) {
-      this.src = fileList.map(item => item.response.data.filePath)
+      this.src = fileList.map(item => item.url || item.response.data.filePath)
       this.$emit('update', this.src)
     },
     beforeUpload: function(file) {
@@ -163,16 +162,27 @@ export default {
       }
       return true
     },
+    changeImg(file, fileList) {
+      const flag = fileList.every(img => {
+        return img.response || img.url.startsWith('https://')
+      })
+      if (flag) {
+        const src = fileList.map(img => (img.response && img.response.data && img.response.data.filePath) || img.url)
+        this.$emit('update', src)
+      }
+    },
     uploadSuccess(response, file, fileList) {
+      console.log(fileList, 'filelist')
       if (this.$attrs.multiple) {
-        const flag = fileList.every(item => item.response)
-        if (flag) {
-          this.src = fileList.map(item => {
-            if (item.response) {
-              return item.response.data.filePath
-            }
-          })
-        }
+        // const oldList = [...this.src]
+        // const list = fileList.filter(item => item.response)
+        // if (list.length) {
+        //   const newList = list.map(item => {
+        //     return item.response.data.filePath
+        //   })
+        //   this.src = Array.from(new Set(oldList.concat(newList)))
+        //   // this.src.push(newList)
+        // }
       } else {
         const newUrl = response.data.filePath
         this.src = newUrl
@@ -207,7 +217,7 @@ export default {
   .upload-wrap{
     width: 120px;
     height: 120px;
-    i, img {
+    i, img, video {
       display: block;
       width: 100%;
       height: 100%;

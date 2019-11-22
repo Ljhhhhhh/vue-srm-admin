@@ -1,52 +1,55 @@
 <template>
-  <el-form
-    :ref="form"
-    v-bind="$attrs"
-    :model="Model"
-    :show-message="showMessage"
-    :inline="inline"
-    :size="size"
-    :label-width="labelWitdh"
-    class="srm-form"
-  >
-    <el-row>
-      <template v-for="(item, index) in _formItems">
-        <el-col
-          :key="index + item.attrs.key || item.slot"
-          :span="item.itemAttrs.col || 24"
-          :style="{'min-width': item.itemAttrs.width +'px', 'max-width': item.itemAttrs.width + 'px'}"
-        >
-          <el-form-item
-            v-if="item._ifRender"
+  <div class="container">
+    <el-form
+      :ref="form"
+      v-bind="$attrs"
+      :model="Model"
+      :show-message="showMessage"
+      :inline="inline"
+      :size="size"
+      :label-width="labelWitdh"
+      class="srm-form"
+    >
+      <el-row>
+        <template v-for="(item, index) in _formItems">
+          <el-col
             :key="index + item.attrs.key || item.slot"
-            v-bind="item.itemAttrs || {}"
-            :prop="item.attrs.key"
+            :span="item.itemAttrs.col || 24"
+            :style="{'min-width': item.itemAttrs.width +'px', 'max-width': item.itemAttrs.width + 'px'}"
           >
-            <!-- 将表单内部的数据通过作用域插槽传给外部 -->
-            <slot v-if="item.slot" :name="item.slot" :scope="Model" />
-            <component
-              :is="item.tag"
-              v-else
-              v-model="Model[item.attrs.key]"
-              :size="size"
-              v-bind="item.attrs || {}"
-              v-on="item.listeners || {}"
-            />
+            <el-form-item
+              v-if="item._ifRender"
+              :key="index + item.attrs.key || item.slot"
+              v-bind="item.itemAttrs || {}"
+              :prop="item.attrs.key"
+            >
+              <!-- 将表单内部的数据通过作用域插槽传给外部 -->
+              <slot v-if="item.slot" :name="item.slot" :scope="Model" />
+              <component
+                :is="item.tag"
+                v-else
+                v-model="Model[item.attrs.key]"
+                :size="size"
+                v-bind="item.attrs || {}"
+                v-on="item.listeners || {}"
+              />
+            </el-form-item>
+          </el-col>
+        </template>
+        <el-col :span="btnCol">
+          <el-form-item v-if="submitMsg || resetMsg">
+            <slot name="buttons" />
+            <el-button v-if="!!submitMsg" @click="handleSubmit">{{ submitMsg }}</el-button>
+            <el-button v-if="resetMsg" @click="handleReset">{{ resetMsg }}</el-button>
+            <!-- <el-button v-if="showBack" :disabled="false" @click="goBack">返回</el-button> -->
+            <span v-if="showBack" class="el-button el-button--small" @click="goBack">返回</span>
           </el-form-item>
         </el-col>
-      </template>
-      <el-col :span="btnCol">
-        <el-form-item v-if="submitMsg || resetMsg">
-          <el-button v-if="!!submitMsg" @click="handleSubmit">{{ submitMsg }}</el-button>
-          <el-button v-if="resetMsg" @click="handleReset">{{ resetMsg }}</el-button>
-          <!-- <el-button v-if="showBack" :disabled="false" @click="goBack">返回</el-button> -->
-          <span v-if="showBack" class="el-button el-button--small" @click="goBack">返回</span>
-        </el-form-item>
-      </el-col>
 
-    </el-row>
+      </el-row>
     <!-- :class="item.itemAttrs.className" -->
-  </el-form>
+    </el-form>
+  </div>
 </template>
 
 <script>
@@ -234,3 +237,13 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+  .container /deep/ .srm-form .el-button--default{
+    padding: 9px 50px;
+    background: #999;
+    color: #FFF;
+    &:hover{
+      background: #333;
+    }
+  }
+</style>
