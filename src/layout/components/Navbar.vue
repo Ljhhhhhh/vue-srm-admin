@@ -12,9 +12,12 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
+          <el-dropdown-item>
+            <span style="display:block;" @click="logout">Log Out</span>
+          </el-dropdown-item>
+          <!-- <router-link to="/">
             <el-dropdown-item>
-              Home
+              <span style="display:block;" @click="logout">Log Out</span>
             </el-dropdown-item>
           </router-link>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
@@ -26,6 +29,7 @@
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">Log Out</span>
           </el-dropdown-item>
+        </el-dropdown-menu> -->
         </el-dropdown-menu>
       </el-dropdown>
     </div>

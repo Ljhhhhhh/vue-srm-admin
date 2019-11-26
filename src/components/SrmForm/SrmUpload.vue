@@ -67,7 +67,7 @@ export default {
     },
     maxSize: {
       type: Number,
-      default: 2048
+      default: 5 * 1024
     },
     imageUrl: {
       type: [String, Array],
@@ -150,7 +150,7 @@ export default {
     beforeUpload: function(file) {
       const ext = this.ext
       const maxSize = this.maxSize
-      const isOkExt = ext.indexOf(file.name.substring(file.name.lastIndexOf('.'))) >= 0
+      const isOkExt = ext.indexOf(file.name.substring(file.name.lastIndexOf('.')).toLocaleLowerCase()) >= 0
       if (!isOkExt) {
         this.$message.error('只能上传' + ext + '格式的文件')
         return false

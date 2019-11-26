@@ -1,7 +1,7 @@
 <template>
   <div>
     <srm-form
-      :inline="false"
+      :inline="true"
       :form-items="formItems"
       :merge-form="mergeForm"
       :api="createArticle"

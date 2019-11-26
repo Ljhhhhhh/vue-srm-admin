@@ -1,13 +1,13 @@
 <template>
   <el-form :ref="SrmValueRegioRef" :model="valueForm" :inline="true" :rules="rules" v-bind="$attrs" style="display: inline">
-    <el-form-item prop="valueStart" class="value-regio-item">
-      <el-input v-model.number="valueForm.valueStart" clearable>
+    <el-form-item prop="min" class="value-regio-item">
+      <el-input v-model.number="valueForm.min" clearable>
         <span v-if="icon" slot="suffix" class="el-input__icon" :class="icon" />
         <span v-if="unit" slot="suffix">{{ unit }}</span>
       </el-input>
     </el-form-item>
-    <el-form-item label="~" prop="valueEnd" class="value-regio-item">
-      <el-input v-model.number="valueForm.valueEnd" clearable>
+    <el-form-item label="~" prop="max" class="value-regio-item">
+      <el-input v-model.number="valueForm.max" clearable>
         <span v-if="icon" slot="suffix" class="el-input__icon" :class="icon" />
         <span v-if="unit" slot="suffix">{{ unit }}</span>
       </el-input>
@@ -19,10 +19,14 @@
 // const MAX_NUMBER = 100000
 export default {
   name: 'SrmValueRegio',
+  model: {
+    prop: 'value',
+    event: 'change'
+  },
   props: {
-    valueArr: {
-      type: Array,
-      required: true
+    value: {
+      type: [Object, null],
+      default: () => {}
     },
     errorMessage: {
       type: Array,
@@ -41,16 +45,16 @@ export default {
     return {
       SrmValueRegioRef: Symbol('SrmValueRegioRef'),
       valueForm: {
-        valueStart: null,
-        valueEnd: null
+        min: null,
+        max: null
       },
       rules: {
-        valueStart: [
+        min: [
           // { required: true, message: '请输入必填项', trigger: 'blur' },
           // { validator: this.validateCom, trigger: 'blur' },
           { validator: this.validateMin, trigger: 'blur' }
         ],
-        valueEnd: [
+        max: [
           // { required: true, message: '请输入必填项', trigger: 'blur' },
           // { validator: this.validateCom, trigger: 'blur' },
           { validator: this.validateMax, trigger: 'blur' }
@@ -60,20 +64,25 @@ export default {
   },
   watch: {
     valueForm: {
-      handler: function(newVal) {
-        const { valueStart, valueEnd } = newVal
-        this.$emit('update:valueArr', [valueStart, valueEnd])
-      },
+      handler: 'getVal',
+      immediate: true,
       deep: true
     }
   },
   mounted() {
     this.valueForm = {
-      valueStart: this.valueArr[0] || '',
-      valueEnd: this.valueArr[1] || ''
+      min: this.value.min,
+      max: this.value.max
     }
   },
   methods: {
+    getVal(val) {
+      const { min, max } = val || this.$attrs.value
+      this.$emit('change', {
+        min,
+        max
+      })
+    },
     validate() {
       let validRes = false
       this.$refs[this.SrmValueRegioRef].validate(valid => {
@@ -95,8 +104,8 @@ export default {
     // },
     validateMin(rule, value, callback) {
       const one = Number(value)
-      const max = Number(this.valueForm.valueEnd)
-      if (!max || one < max) {
+      const max = Number(this.valueForm.max)
+      if (!max || one <= max) {
         return callback()
       }
       const errorMsg = this.errorMessage.length ? this.errorMessage[0] : `输入值不得大于${max}`
@@ -104,8 +113,8 @@ export default {
     },
     validateMax(rule, value, callback) {
       const one = Number(value)
-      const min = Number(this.valueForm.valueStart)
-      if (!min || one > min) {
+      const min = Number(this.valueForm.min)
+      if (!min || one >= min) {
         return callback()
       }
       const errorMsg = this.errorMessage[1] ? this.errorMessage[1] : `输入值不得小于${min}`

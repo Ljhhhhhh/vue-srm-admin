@@ -12,7 +12,8 @@
     >
       <el-row>
         <template v-for="(item, index) in _formItems">
-          <el-col
+          <component
+            :is="inline ? 'span' : 'el-col'"
             :key="index + item.attrs.key || item.slot"
             :span="item.itemAttrs.col || 24"
             :style="{'min-width': item.itemAttrs.width +'px', 'max-width': item.itemAttrs.width + 'px'}"
@@ -34,9 +35,9 @@
                 v-on="item.listeners || {}"
               />
             </el-form-item>
-          </el-col>
+          </component>
         </template>
-        <el-col :span="btnCol">
+        <component :is="inline ? 'span' : 'el-col'" :span="btnCol">
           <el-form-item v-if="submitMsg || resetMsg">
             <slot name="buttons" />
             <el-button v-if="!!submitMsg" @click="handleSubmit">{{ submitMsg }}</el-button>
@@ -44,7 +45,7 @@
             <!-- <el-button v-if="showBack" :disabled="false" @click="goBack">返回</el-button> -->
             <span v-if="showBack" class="el-button el-button--small" @click="goBack">返回</span>
           </el-form-item>
-        </el-col>
+        </component>
 
       </el-row>
     <!-- :class="item.itemAttrs.className" -->
