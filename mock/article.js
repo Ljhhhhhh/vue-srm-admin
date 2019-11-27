@@ -1,4 +1,5 @@
 import Mock from 'mockjs'
+// http://mockjs.com/examples.html#Image
 
 const List = []
 const count = 100
