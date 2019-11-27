@@ -16,7 +16,6 @@
             :is="inline ? 'span' : 'el-col'"
             :key="index + item.attrs.key || item.slot"
             :span="item.itemAttrs.col || 24"
-            :style="{'min-width': item.itemAttrs.width +'px', 'max-width': item.itemAttrs.width + 'px'}"
           >
             <el-form-item
               v-if="item._ifRender"
@@ -144,11 +143,17 @@ export default {
       handler() {
         this.formItems.forEach(formItem => {
           if (!formItem.attrs || !formItem.attrs.key) return // 跳过没有key的属性(插槽)
-          this.$set(
-            this.Model,
-            formItem.attrs.key,
-            formItem.attrs.value ? formItem.attrs.value : ''
-          )
+          let value = formItem.attrs.value
+          if (formItem.tag === 'value-regio') {
+            value = value || {}
+          }
+          if (value) {
+            this.$set(
+              this.Model,
+              formItem.attrs.key,
+              value
+            )
+          }
         })
         this.originModel = JSON.parse(JSON.stringify(this.Model))
       },
@@ -209,8 +214,6 @@ export default {
       this.$refs[form].validate(async valid => {
         if (valid) {
           try {
-            // const res = await this.api(this.Model)
-            // this.$emit('after-submit', res)
             this.$emit('submit')
           } catch (e) {
             console.log(e)

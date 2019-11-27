@@ -1,25 +1,63 @@
 import { constantRoutes, asyncRoutes } from '@/router'
 
+/**
+ * Use meta.role to determine if the current user has permission
+ * @param roles
+ * @param route
+ */
+function hasPermission(role, route) {
+  if (route.meta && route.meta.roles) {
+    return route.meta.roles.includes(role)
+  } else {
+    return true
+  }
+}
+
+/**
+ * Filter asynchronous routing tables by recursion
+ * @param routes asyncRoutes
+ * @param roles
+ */
+export function filterAsyncRoutes(routes, roles) {
+  const res = []
+
+  routes.forEach(route => {
+    const tmp = { ...route }
+    if (hasPermission(roles, tmp)) {
+      if (tmp.children) {
+        tmp.children = filterAsyncRoutes(tmp.children, roles)
+      }
+      res.push(tmp)
+    }
+  })
+
+  return res
+}
+
 const state = {
   routes: [],
   addRoutes: []
 }
 
 const mutations = {
-  SET_ROUTES: (state, routes) => {
+  SET_ROUTE: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes
       .concat(routes) // 添加用户角色对应的路由
+  },
+  RESET_ROUTE: (state) => {
+    state.addRoutes = []
+    state.routes = constantRoutes
   }
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
-    console.log(roles, 'payload')
-    // TODO:: 根据角色获取具体的路由
+  generateRoutes({ commit }, role) {
+    // 根据角色获取具体的路由
+    const accessedRoutes = filterAsyncRoutes(asyncRoutes, role)
     return new Promise(resolve => {
-      commit('SET_ROUTES', asyncRoutes)
-      resolve(asyncRoutes)
+      commit('SET_ROUTE', accessedRoutes)
+      resolve(accessedRoutes)
     })
   }
 }

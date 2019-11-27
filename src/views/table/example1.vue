@@ -19,7 +19,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-        <SrmValueRegio :value-arr.sync="filterQuery.valueArr" label="金额限制" unit="元" />
+        <SrmValueRegio v-model="filterQuery.valueArr" label="金额限制" unit="元" />
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
@@ -52,7 +52,7 @@ import {
 import SrmValueRegio from '@/components/SrmForm/SrmValueRegio'
 import SrmTable from '@/components/SrmTable'
 export default {
-  name: 'MyTable',
+  name: 'TableExample1',
   components: {
     SrmTable,
     SrmValueRegio

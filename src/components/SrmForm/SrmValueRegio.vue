@@ -50,13 +50,9 @@ export default {
       },
       rules: {
         min: [
-          // { required: true, message: '请输入必填项', trigger: 'blur' },
-          // { validator: this.validateCom, trigger: 'blur' },
           { validator: this.validateMin, trigger: 'blur' }
         ],
         max: [
-          // { required: true, message: '请输入必填项', trigger: 'blur' },
-          // { validator: this.validateCom, trigger: 'blur' },
           { validator: this.validateMax, trigger: 'blur' }
         ]
       }
@@ -90,18 +86,6 @@ export default {
       })
       return validRes
     },
-    // validateCom(rule, value, callback) {
-    //   const one = Number(value)
-    //   if (Number.isInteger(one)) {
-    //     if (one < MIN_NUMBER) {
-    //       return callback(new Error('输入值必须大于0'))
-    //     } else if (one > MAX_NUMBER) {
-    //       return callback(new Error('输入值必须小于100000'))
-    //     }
-    //     return callback()
-    //   }
-    //   return callback(new Error('输入值必须为正整数'))
-    // },
     validateMin(rule, value, callback) {
       const one = Number(value)
       const max = Number(this.valueForm.max)

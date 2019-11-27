@@ -49,6 +49,7 @@
 
 <script>
 export default {
+  name: 'FormExample2',
   data() {
     return {
       form: {

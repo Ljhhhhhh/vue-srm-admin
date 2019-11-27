@@ -52,16 +52,11 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
   }
 ]
-
-/**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
 
 const files = require.context('./modules', false, /\.js$/)
 const modules = []
@@ -70,7 +65,6 @@ files.keys().forEach(key => {
   modules.push(files(key).default)
 })
 
-console.log(modules, 'modules')
 export const asyncRoutes = [
   ...modules,
   // 404 page must be placed at the end !!!
@@ -89,7 +83,6 @@ const router = createRouter()
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
-  router.$route.push('/login')
 }
 
 export default router

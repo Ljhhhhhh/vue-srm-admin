@@ -3,9 +3,9 @@
     <srm-form
       :inline="true"
       :form-items="formItems"
-      :merge-form="mergeForm"
-      :api="createArticle"
-      @after-submit="showTableData"
+      :merge-form.sync="mergeForm"
+      @submit="showTableData"
+      @after-reset="getList"
     >
       <template v-slot:slotCheckBox>
         <el-checkbox v-model="mergeForm.slotCheckBox">插槽复选框1</el-checkbox>
@@ -25,7 +25,7 @@ import SrmForm from '@/components/SrmForm'
 import { findItem } from '@/components/SrmForm/util'
 import { createArticle, fetchList } from '@/api/article'
 export default {
-  name: 'MyForm',
+  name: 'FormExample1',
   components: {
     SrmForm
   },
@@ -39,7 +39,6 @@ export default {
           },
           attrs: {
             key: 'name',
-            value: '1123',
             placeholder: '请输入姓名'
           },
           getAttrs(Model) {
@@ -69,7 +68,6 @@ export default {
           },
           attrs: {
             key: 'hobby',
-            value: '2',
             placeholder: '请输入兴趣',
             options: [
               { value: '1', label: '吃饭' },
@@ -84,8 +82,7 @@ export default {
             label: '日期'
           },
           attrs: {
-            key: 'date',
-            value: '2018/11/12'
+            key: 'date'
           }
         },
         {
@@ -168,19 +165,10 @@ export default {
         {
           tag: 'value-regio',
           itemAttrs: {
-            label: '对对对'
+            label: '订单金额'
           },
           attrs: {
-            valueArr: [1, 2]
-          }
-        },
-        {
-          tag: 'value-regio',
-          itemAttrs: {
-            label: '对对对4123'
-          },
-          attrs: {
-            valueArr: [3, 2]
+            key: 'priceRegio'
           }
         },
         {
@@ -194,17 +182,15 @@ export default {
         }
       ],
       createArticle,
-      mergeForm: {
-        slotCheckBox: ''
-      }
+      mergeForm: {}
     }
-  },
-  mounted() {
-    // this.getInfo()
   },
   methods: {
     showTableData() {
       console.log('showTableData')
+    },
+    getList() {
+      console.log('getList')
     },
     async getInfo() {
       try {
