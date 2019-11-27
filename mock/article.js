@@ -18,8 +18,8 @@ for (let i = 0; i < count; i++) {
     forecast: '@float(0, 100, 2, 2)',
     importance: '@integer(1, 3)',
     'type|1': ['CN', 'US', 'JP', 'EU'],
-    'status|1': ['published', 'draft', 'deleted'],
-    display_time: '@datetime',
+    'status|1': [3, 1, 2],
+    display_time: '@date()',
     comment_disabled: true,
     pageviews: '@integer(300, 5000)',
     image_uri,
@@ -32,12 +32,12 @@ export default [
     url: '/article/list',
     type: 'get',
     response: config => {
-      const { importance, type, title, page = 1, limit = 20, sort } = config.query
+      const { status, author, title, page = 1, pageSize = 10, sort } = config.query
 
       let mockList = List.filter(item => {
-        if (importance && item.importance !== +importance) return false
-        if (type && item.type !== type) return false
+        if (+status && item.status !== +status) return false
         if (title && item.title.indexOf(title) < 0) return false
+        if (author && item.author.indexOf(author) < 0) return false
         return true
       })
 
@@ -45,7 +45,7 @@ export default [
         mockList = mockList.reverse()
       }
 
-      const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
+      const pageList = mockList.filter((item, index) => index < pageSize * page && index >= pageSize * (page - 1))
 
       return {
         code: 20000,

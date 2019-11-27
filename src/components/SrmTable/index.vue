@@ -51,6 +51,7 @@
         >
           <template slot-scope="scope">
             <img
+              class="srm-table_img"
               :src="scope.row[column.prop]"
               :width="column.width || '120px'"
               :height="column.height || 'auto'"
@@ -89,7 +90,7 @@
         </el-button>
       </div>
       <el-pagination
-        v-show="total>0"
+        v-show="total > pageRequest.pageSize"
         class="pagination"
         background
         layout="total, prev, pager, next "
@@ -147,7 +148,7 @@ export default {
       type: Object,
       default: () => ({
         pageNo: 1,
-        pageSize: 15
+        pageSize: 10
       })
     }
   },
@@ -165,6 +166,13 @@ export default {
   watch: {
     sourceData: function() {
       scrollTo(0, 0)
+    },
+    pageRequest: {
+      handler(val) {
+        console.log(val, 'pagerequest val')
+        // TODO:: 页码显示不更新
+      },
+      deep: true
     }
   },
   methods: {
@@ -224,6 +232,9 @@ export default {
 <style lang="scss" scoped>
 .container{
   padding: 0 15px;
+}
+.srm-table_img{
+  cursor: pointer;
 }
 .toolbar{
   margin-top: 15px;

@@ -15,7 +15,6 @@ export default {
       this.$router.replace(data)
     },
     async handleItem(fn, param, cb) {
-      console.log(param.length, 'length')
       let data
       if (typeof param === 'string') {
         data = [param]

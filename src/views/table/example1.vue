@@ -1,109 +1,124 @@
 <template>
   <div>
-    <div class="handle-content">
-      <el-form :inline="true" :model="filterQuery" class="demo-form-inline" size="mini">
-        <el-form-item label="审批人">
-          <el-input v-model="filterQuery.user" placeholder="审批人" clearable />
-        </el-form-item>
-        <el-form-item label="活动区域">
-          <el-select v-model="filterQuery.region" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai" />
-            <el-option label="区域二" value="beijing" />
-          </el-select>
-        </el-form-item>
-        <el-date-picker
-          v-model="filterQuery.time"
-          size="small"
-          type="datetimerange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
-        <SrmValueRegio v-model="filterQuery.valueArr" label="金额限制" unit="元" />
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <srm-form
+      :inline="true"
+      :form-items="queryColumns"
+      :merge-form.sync="mergeForm"
+      :show-back="false"
+      :btn-col="6"
+      class="search-content"
+      submit-msg="搜索"
+      @submit="getList"
+      @after-reset="changePage(1)"
+    />
     <srm-table
       :source-data="tableData"
       :columns="columns"
       :total="total"
-      :select-disabled="selectDisabled"
       :page-request="listQuery"
       :loading="listLoading"
       @changePage="changePage"
+      @selectionChange="selectionChange"
     >
-      <el-table-column slot="operate" label="操作">
+      <div
+        slot="buttons"
+        class="srm-table-btn"
+      >
+        <el-button
+          type="success"
+          icon="el-icon-plus"
+          @click="handleProduct(false)"
+        >新增</el-button>
+        <!-- <el-button
+          type="info"
+          icon="el-icon-document"
+          @click="goLogs"
+        >操作日志</el-button> -->
+      </div>
+      <el-table-column
+        slot="status"
+        label="审核状态"
+        align="center"
+      >
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="edit(scope.row)">编辑</el-button>
-          <el-button type="text" size="small" @click="deleteUser(scope.row)">删除</el-button>
+          <el-tag v-if="+scope.row.status === 0">待审核</el-tag>
+          <el-tag
+            v-if="+scope.row.status === 1"
+            type="success"
+          >审核通过</el-tag>
+          <el-tag
+            v-if="+scope.row.status === 2"
+            type="danger"
+          >驳回</el-tag>
         </template>
       </el-table-column>
     </srm-table>
-  </div></template>
+  </div>
+</template>
 <script>
 import {
   fetchList
-  // fetchPv,
-  // createArticle,
-  // updateArticle
 } from '@/api/article'
-import SrmValueRegio from '@/components/SrmForm/SrmValueRegio'
-import SrmTable from '@/components/SrmTable'
+import { statusMap } from './statusMap'
 export default {
   name: 'TableExample1',
-  components: {
-    SrmTable,
-    SrmValueRegio
-  },
   data() {
     return {
+      currentItem: null,
       tableData: [],
       columns: [
-        { prop: 'id', label: 'ID', minWidth: 50 },
-        { prop: 'author', label: '作者', minWidth: 100, width: 500 },
-        { prop: 'title', label: '标题', minWidth: 100 },
-        { prop: 'timestamp', label: '创建时间', minWidth: 100, sortable: true, formatter: (row, column, cellValue) => (
-          this.dayjs(cellValue).format('YYYY年MM月DD日')
-        )
-        },
-        { prop: 'image_uri', label: '图片预览', minWidth: 100, isImg: true, previewWidth: '520px' },
-        { prop: 'status', label: '状态', minWidth: 70, render: (h, { row, index }) => {
-          const { status } = row
-          const statusMap = {
-            published: { text: '发布', type: 'success' },
-            draft: { text: '下架', type: 'warning' },
-            deleted: { text: '删除', type: 'danger' }
-          }
-          const statusText = statusMap[status].text
-          return h('el-button', {
-            props: {
-              size: 'mini',
-              type: statusMap[status].type
-            },
-            on: {
-              click: () => {
-                this.setStatus(row)
-              }
-            }
-          }, statusText)
+        { type: 'index', label: '序号' },
+        { prop: 'author', label: '作者' },
+        { prop: 'title', label: '标题' },
+        { prop: 'image_uri', label: '封面', isImg: true },
+        { prop: 'pageviews', label: '阅读量' },
+        { prop: 'status', label: '当前状态', formatter: (row, column, cellvalue) => {
+          return statusMap.find(item => item.value === cellvalue).label
         } },
-        { slot: 'operate' }
+        { prop: 'display_time', label: '发布时间' }
+
+      ],
+      queryColumns: [
+        {
+          tag: 'input',
+          itemAttrs: {
+            label: '文章标题'
+          },
+          attrs: {
+            key: 'title',
+            placeholder: '请输入文章标题'
+          }
+        },
+        {
+          tag: 'input',
+          itemAttrs: {
+            label: '作者'
+          },
+          attrs: {
+            key: 'author',
+            placeholder: '请输入作者'
+          }
+        },
+        {
+          tag: 'select',
+          itemAttrs: {
+            label: '文章状态'
+          },
+          attrs: {
+            key: 'status',
+            options: statusMap
+          }
+        }
       ],
       total: 0,
       listLoading: false,
-      filterQuery: {
-        user: '',
-        region: '',
-        time: [],
-        valueArr: []
-      },
-      selectDisabled: false,
+      mergeForm: {},
       listQuery: {
-        pageNum: 1,
-        pageSize: 20
-      }
+        page: 1,
+        pageSize: 10
+      },
+      selectedItems: [],
+      dialogShippingVisible: false // 设置运费模板弹窗可见
     }
   },
   watch: {
@@ -112,33 +127,50 @@ export default {
       deep: true
     }
   },
-  created() {
+  mounted() {
     this.getList()
   },
   methods: {
-    onSubmit() {
-      console.log(this.filterQuery)
+    selectionChange(list) {
+      this.selectedItems = list.selections
     },
-    setStatus(row) {
-      console.log(row, 'row')
+    handleProduct(item, readonly = false) {
+      if (!item) {
+        this.$router.push({ name: 'CreateProduct', params: {
+          readonly
+        }})
+      } else {
+        this.$router.push({ name: 'CreateProduct', params: {
+          id: item.goodsId,
+          readonly
+        }})
+      }
     },
+    handleDialog(item) {
+      this.dialogVisible = true
+      this.currentItem = item
+    },
+    // async deleteItem() {
+    //   let ids
+    //   if (Array.isArray(this.currentItem)) {
+    //     ids = this.currentItem.map(item => item.goodsId)
+    //   } else {
+    //     ids = this.currentItem.goodsId
+    //   }
+    //   this.handleItem(deleteProduct, ids, this.getList)
+    // },
     changePage(page) {
-      this.listQuery.pageNum = page
+      this.listQuery.page = page
     },
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.tableData = response.data.items
-          this.total = response.data.total
-          this.listLoading = false
-        }, 1 * 1000)
+      const query = this.$formattQuery(this.listQuery, this.mergeForm)
+      fetchList(query).then(response => {
+        this.tableData = response.data.items
+        this.total = response.data.total
+        this.listLoading = false
       })
     }
   }
 }
 </script>
-<style lang="scss" scoped>
-
-</style>
