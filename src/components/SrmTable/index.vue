@@ -1,9 +1,10 @@
 <template>
   <div class="container">
     <div class="handle-wrap">
-      <!-- 如果使用此slot，请给slot添加class="srm-table-btn" -->
       <slot name="buttons" />
       <el-button
+        v-if="showExport"
+        class="table-export_btn"
         :disabled="!selections.length"
         :loading="downloadLoading"
         type="primary"
@@ -12,7 +13,6 @@
       >
         <span>导出</span><span v-show="selections.length">{{ selections.length }}项</span>
       </el-button>
-
     </div>
     <el-table
       v-loading="loading"
@@ -77,7 +77,7 @@
     <div
       class="toolbar"
     >
-      <div class="handle-wrap">
+      <div v-if="deleteVisible" class="handle-wrap">
         <el-button
           class="button"
           size="small"
@@ -96,7 +96,7 @@
         layout="total, prev, pager, next "
         :total="total"
         :page-size="pageRequest.pageSize"
-        :current-page="pageRequest.pageNo"
+        :current-page.sync="pageRequest.page"
         @current-change="currentChange"
       />
     </div>
@@ -147,9 +147,17 @@ export default {
     pageRequest: {
       type: Object,
       default: () => ({
-        pageNo: 1,
+        page: 1,
         pageSize: 10
       })
+    },
+    showExport: {
+      type: Boolean,
+      default: true
+    },
+    deleteVisible: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -166,13 +174,6 @@ export default {
   watch: {
     sourceData: function() {
       scrollTo(0, 0)
-    },
-    pageRequest: {
-      handler(val) {
-        console.log(val, 'pagerequest val')
-        // TODO:: 页码显示不更新
-      },
-      deep: true
     }
   },
   methods: {
@@ -191,8 +192,8 @@ export default {
       this.$emit('handleBatchDelete', this.selections)
     },
     // 切换页面
-    currentChange(pageNo) {
-      this.$emit('changePage', pageNo)
+    currentChange(page) {
+      this.$emit('changePage', page)
     },
     setAttrs(options) {
       return {
@@ -253,5 +254,8 @@ export default {
   align-items: center;
   text-align: center;
   margin-bottom: 15px;
+}
+* + .table-export_btn{
+  margin-left: 15px;
 }
 </style>

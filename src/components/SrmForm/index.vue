@@ -98,6 +98,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    formName: {
+      type: String,
+      required: true
+    },
     size: {
       type: String,
       default: 'small'
@@ -170,9 +174,9 @@ export default {
   },
   mounted() {
     // 代理父组件的mergeForm属性
-    const parentComponent = findComponentUpwardByProp(this, 'mergeForm')
+    const parentComponent = findComponentUpwardByProp(this, this.formName)
     if (parentComponent) {
-      parentComponent.mergeForm = proxyProp(parentComponent.mergeForm)
+      parentComponent[this.formName] = proxyProp(parentComponent[this.formName])
     } else {
       throw new Error('can not find parentComponent')
     }
