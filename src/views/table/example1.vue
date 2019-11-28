@@ -41,10 +41,7 @@ export default {
         { prop: 'title', label: '标题' },
         { prop: 'image_uri', label: '封面', isImg: true },
         { prop: 'pageviews', label: '阅读量' },
-        { prop: 'status', label: '当前状态', formatter: (row, column, cellvalue) => {
-          console.log(row, cellvalue, '12341421')
-          return statusMap.find(item => item.value === cellvalue).label
-        } },
+        { prop: 'status', label: '当前状态', formatter: this.statusFormat },
         { prop: 'display_time', label: '发布时间' }
       ],
       queryColumns: [
@@ -80,6 +77,12 @@ export default {
         }
       ],
       searchForm: {}
+    }
+  },
+  methods: {
+    statusFormat(row, column, cellvalue) {
+      console.log(12)
+      return statusMap.find(item => item.value === cellvalue).label
     }
   }
 }
