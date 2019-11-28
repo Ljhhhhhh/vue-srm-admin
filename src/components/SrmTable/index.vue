@@ -61,12 +61,6 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-else-if="column.type === 'index'"
-          :key="column.type"
-          type="index"
-          v-bind="setAttrs(column)"
-        />
-        <el-table-column
           v-else
           :key="column.prop"
           v-bind="setAttrs(column)"
@@ -197,6 +191,7 @@ export default {
     },
     setAttrs(options) {
       return {
+        type: options.type,
         align: options.align || 'center',
         prop: options.prop,
         label: options.label,
