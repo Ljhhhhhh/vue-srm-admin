@@ -11,6 +11,16 @@
       @submit="refresh"
       @after-reset="refresh"
     />
+
+    <el-table :data="tableData">
+      <el-table-column label="状态" prop="status" :formatter="statusFormat">
+        <!-- <template slot-scope="scope">
+          <div>
+            {{ scope.row.status }}
+          </div>
+        </template> -->
+      </el-table-column>
+    </el-table>
     <srm-table
       :source-data="tableData"
       :delete-visible="false"
