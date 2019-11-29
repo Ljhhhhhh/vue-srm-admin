@@ -1,10 +1,10 @@
+import Cookies from 'js-cookie'
+import settings from '@/settings'
+
 export default {
   data() {
     return {
-      listQuery: {
-        page: 1,
-        pageSize: 3
-      },
+      listQuery: { ...settings.listQuery }, // 扩展运算，以免影响settings中的值
       total: 0,
       listLoading: false,
       fetchList: null,
@@ -15,6 +15,12 @@ export default {
     listQuery: {
       handler: 'getList',
       deep: true
+    }
+  },
+  activated() {
+    if (Cookies.get(settings.needRefresh) && typeof this.getList === 'function') {
+      this.getList()
+      Cookies.remove(settings.needRefresh)
     }
   },
   mounted() {
@@ -44,6 +50,17 @@ export default {
         this.total = response.data.total
         this.listLoading = false
       })
+    },
+    async mixinHandleItem(fn, cb, ...rest) {
+      const { code, message } = await fn(...rest)
+      if (code === 20000) {
+        this.$message.success('操作成功')
+        if (cb && typeof cb === 'function') {
+          cb()
+        }
+      } else {
+        this.$message.error(message || '操作失败，请重试')
+      }
     }
   }
 }

@@ -10,18 +10,18 @@ export default {
     }
   },
   methods: {
-    goListWithRefresh(data) {
+    goListWithRefresh(route) {
       Cookies.set(needRefresh, true)
-      this.$router.replace(data)
+      this.$router.replace(route)
     },
-    async handleItem(fn, param, cb) {
-      let data
-      if (typeof param === 'string') {
-        data = [param]
-      } else {
-        data = param
-      }
-      const { code, message } = await fn(data)
+    async handleItem(fn, cb, ...rest) {
+      // let data
+      // if (typeof param === 'string') {
+      //   data = [param]
+      // } else {
+      //   data = param
+      // }
+      const { code, message } = await fn(...rest)
       if (code === 200) {
         this.$message.success('操作成功')
         if (cb && typeof cb === 'function') {

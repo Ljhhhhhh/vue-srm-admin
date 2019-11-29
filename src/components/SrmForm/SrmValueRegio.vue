@@ -24,18 +24,22 @@ export default {
     event: 'change'
   },
   props: {
+    // 类型为对象的值，需要包含min/max两个属性
     value: {
       type: [Object, null],
       default: () => {}
     },
+    // 验证失败时的错误提示，分别针对min和max的数组
     errorMessage: {
       type: Array,
       default: () => []
     },
+    // 图标
     icon: {
       type: String,
       default: ''
     },
+    // 单位
     unit: {
       type: String,
       default: ''

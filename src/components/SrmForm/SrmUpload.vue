@@ -93,15 +93,6 @@ export default {
     }
   },
   computed: {
-    // fileList() {
-    //   if (this.$attrs.multiple && Array.isArray(this.src)) {
-    //     return this.src.map((item, idx) => ({
-    //       name: idx,
-    //       url: item
-    //     }))
-    //   }
-    //   return []
-    // },
     maxSizeWithUnit() {
       if (this.maxSize > 1024) {
         return (this.maxSize / 1024).toFixed(2) + 'MB'
@@ -172,17 +163,8 @@ export default {
       }
     },
     uploadSuccess(response, file, fileList) {
-      console.log(fileList, 'filelist')
       if (this.$attrs.multiple) {
-        // const oldList = [...this.src]
-        // const list = fileList.filter(item => item.response)
-        // if (list.length) {
-        //   const newList = list.map(item => {
-        //     return item.response.data.filePath
-        //   })
-        //   this.src = Array.from(new Set(oldList.concat(newList)))
-        //   // this.src.push(newList)
-        // }
+        // 多图上传通过`changeImg`处理
       } else {
         const newUrl = response.data.filePath
         this.src = newUrl
@@ -204,14 +186,6 @@ export default {
     line-height: 1;
     font-size: 0;
   }
-  // .avatar-uploader-icon {
-  //   font-size: 28px;
-  //   color: #8c939d;
-  //   width: 120px;
-  //   height: 120px;
-  //   line-height: 120px;
-  //   text-align: center;
-  // }
 }
 .srm-upload_container /deep/ {
   .upload-wrap{

@@ -237,9 +237,6 @@ export default {
       this.$emit('after-reset')
     },
     goBack() {
-      // this.$router.push({ path: '/brand/list', params: {
-      //   refresh: true
-      // }})
       this.$router.go(-1)
     }
   }

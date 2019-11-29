@@ -258,7 +258,7 @@ import {
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-
+import settings from '@/settings'
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
   { key: 'US', display_name: 'USA' },
@@ -349,6 +349,7 @@ export default {
   },
   created() {
     this.getList()
+    console.log(settings, 'settings')
   },
   methods: {
     getList() {

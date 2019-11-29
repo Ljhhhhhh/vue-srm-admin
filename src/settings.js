@@ -14,5 +14,10 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: false
+  sidebarLogo: false,
+  needRefresh: '__needRefresh__',
+  listQuery: {
+    page: 1,
+    pageSize: 10
+  }
 }

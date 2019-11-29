@@ -145,13 +145,20 @@ export default {
         pageSize: 10
       })
     },
+    // 是否可导出
     showExport: {
       type: Boolean,
       default: true
     },
+    // 是否可以批量删除
     deleteVisible: {
       type: Boolean,
       default: true
+    },
+    // 导出文件默认名称
+    exportName: {
+      type: String,
+      default: document.title
     }
   },
   data() {
@@ -206,18 +213,19 @@ export default {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
         const filterColumn = this.columns.filter(v => v.prop)
-        const tHeader = filterColumn.map(v => v.label)
+        const tHeader = []
         const data = this.selections.map((item) => filterColumn.map(col => {
           if (!col.prop) return
+          tHeader.push(col.label)
           if (col.formatter) {
-            return col.formatter(this.selections[col])
+            return col.formatter('', '', item[col.prop])
           }
           return item[col.prop]
         }))
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: 'table-list'
+          filename: this.exportName
         })
         this.downloadLoading = false
       })
