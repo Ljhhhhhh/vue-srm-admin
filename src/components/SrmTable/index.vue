@@ -196,18 +196,13 @@ export default {
     currentChange(page) {
       this.$emit('changePage', page)
     },
-    setAttrs(options) {
-      return {
-        type: options.type,
-        align: options.align || 'center',
-        prop: options.prop,
-        label: options.label,
-        width: options.width,
-        minWidth: options.minWidth,
-        fixed: options.fixed,
-        formatter: options.formatter,
-        sortable: options.sortable
+    setAttrs(params) {
+      // eslint-disable-next-line
+      const { slot, ...options } = params
+      if (!options.align) {
+        options.align = 'center'
       }
+      return { ...options }
     },
     handleDownload() {
       this.downloadLoading = true

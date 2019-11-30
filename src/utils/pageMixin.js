@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 import settings from '@/settings'
-
+import SrmDialogCheck from '@/components/SrmDialogCheck'
 export default {
   data() {
     return {
@@ -8,8 +8,12 @@ export default {
       total: 0,
       listLoading: false,
       fetchList: null,
-      tableData: []
+      tableData: [],
+      checkDialogItem: undefined // 当前选择项
     }
+  },
+  components: {
+    SrmDialogCheck
   },
   watch: {
     listQuery: {
@@ -51,15 +55,21 @@ export default {
         this.listLoading = false
       })
     },
+    /**
+     * @description: 操作项目及回调
+     * fn: 需要执行的函数
+     * cb: 回调（可传空）
+     * ...rest: 需要执行函数的参数
+     */
     async mixinHandleItem(fn, cb, ...rest) {
-      const { code, message } = await fn(...rest)
+      const { code, data } = await fn(...rest)
       if (code === 20000) {
         this.$message.success('操作成功')
         if (cb && typeof cb === 'function') {
           cb()
         }
       } else {
-        this.$message.error(message || '操作失败，请重试')
+        this.$message.error(data || '操作失败，请重试')
       }
     }
   }

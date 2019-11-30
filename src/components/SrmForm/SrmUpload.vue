@@ -18,9 +18,6 @@
         />
       </div>
     </el-upload>
-    <!--
-      :on-success="uploadSuccess"
-     -->
     <el-upload
       v-else
       :before-upload="beforeUpload"
@@ -34,11 +31,6 @@
       :on-exceed="onExceed"
       :on-change="changeImg"
     >
-      <!-- <div class="upload-wrap">
-        <i
-          class="el-icon-plus"
-        />
-      </div> -->
       <i class="el-icon-plus" />
     </el-upload>
     <div

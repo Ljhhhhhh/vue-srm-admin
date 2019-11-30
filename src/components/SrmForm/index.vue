@@ -8,7 +8,6 @@
       :inline="inline"
       :size="size"
       :label-width="labelWitdh"
-      class="srm-form"
     >
       <el-row>
         <template v-for="(item, index) in _formItems">
@@ -39,24 +38,18 @@
         <component :is="inline ? 'span' : 'el-col'" :span="btnCol">
           <el-form-item v-if="submitMsg || resetMsg">
             <slot name="buttons" />
-            <el-button v-if="!!submitMsg" @click="handleSubmit">{{ submitMsg }}</el-button>
-            <el-button v-if="resetMsg" @click="handleReset">{{ resetMsg }}</el-button>
-            <!-- <el-button v-if="showBack" :disabled="false" @click="goBack">返回</el-button> -->
+            <el-button v-if="!!submitMsg" type="primary" @click="handleSubmit">{{ submitMsg }}</el-button>
+            <el-button v-if="resetMsg" type="info" @click="handleReset">{{ resetMsg }}</el-button>
             <span v-if="showBack" class="el-button el-button--small" @click="goBack">返回</span>
           </el-form-item>
         </component>
 
       </el-row>
-    <!-- :class="item.itemAttrs.className" -->
     </el-form>
   </div>
 </template>
 
 <script>
-/*
-  attrs 中转给el-form-item的各类属性
-  itemAttrs 额外增加的各类属性
-*/
 import componentMap from './util'
 import SrmSelect from './SrmSelect'
 import SrmRadioGroup from './SrmRadioGroup'
@@ -242,13 +235,4 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-  .container /deep/ .srm-form .el-button--default{
-    padding: 9px 50px;
-    background: #999;
-    color: #FFF;
-    &:hover{
-      background: #333;
-    }
-  }
-</style>
+

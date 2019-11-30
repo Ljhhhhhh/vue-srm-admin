@@ -126,10 +126,3 @@ div:focus {
 .require-visible /deep/ .el-form-item__label::before {
   display: none;
 }
-// 不需要数据的表格
-// .no-body_table /deep/ .el-table__body-wrapper {
-//   display: none;
-//   .el-table--small td, .el-table--small th{
-//     padding: 0;
-//   }
-// }
