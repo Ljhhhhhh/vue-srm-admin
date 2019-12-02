@@ -19,9 +19,11 @@
       :loading="listLoading"
       @changePage="changePage"
     >
+      <el-button slot="buttons" type="success" icon="el-icon-plus">新增</el-button>
       <el-table-column slot="operation" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="setItem(scope.row)">删除</el-button>
+          <el-button type="text" @click="setItem(scope.row, 'delete')">删除</el-button>
+          <el-button type="text" @click="setItem(scope.row, 'detail')">查看</el-button>
         </template>
       </el-table-column>
     </srm-table>
@@ -95,8 +97,19 @@ export default {
     statusFormat(row, column, cellvalue) {
       return statusMap.find(item => item.value === cellvalue).label
     },
-    setItem(item) {
-      this.checkDialogItem = item
+    setItem(item, type) {
+      switch (type) {
+        case 'delete':
+          this.checkDialogItem = item
+          break
+        case 'detail':
+          this.$router.push({ name: 'ArticleDetail', params: {
+            id: item.id
+          }})
+          break
+        default:
+          break
+      }
     },
     deleteItem(item) {
       this.mixinHandleItem(deleteArticle, this.getList, item.id)

@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie'
 
+// TODO:: 用vuex替代
 const needRefresh = 'needRefresh'
 
 export default {

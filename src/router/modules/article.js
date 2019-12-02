@@ -22,7 +22,23 @@ const ArticleRouter = {
       path: 'detail',
       component: () => import('@/views/article/detail'),
       name: 'ArticleDetail',
-      meta: { title: '文章详情', noCache: true },
+      meta: { title: '文章详情' },
+      hidden: true
+    },
+    /*
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/example/edit'),
+        name: 'EditArticle',
+        meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
+        hidden: true
+      },
+    */
+    {
+      path: 'handle',
+      component: () => import('@/views/article/handle'),
+      name: 'ArticleHandle',
+      meta: { title: '文章新增' },
       hidden: true
     }
   ]

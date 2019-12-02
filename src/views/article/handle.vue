@@ -1,12 +1,12 @@
 <template>
   <div>
-    文章详情
+    文章操作
     <el-button @click="back">返回</el-button>
   </div>
 </template>
 <script>
 export default {
-  name: 'ArticleDetail',
+  name: 'ArticleHandle',
   data() {
     return {
       id: null

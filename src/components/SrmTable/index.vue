@@ -213,7 +213,7 @@ export default {
           if (!col.prop) return
           tHeader.push(col.label)
           if (col.formatter) {
-            return col.formatter('', '', item[col.prop])
+            return col.formatter(item, '', item[col.prop])
           }
           return item[col.prop]
         }))
