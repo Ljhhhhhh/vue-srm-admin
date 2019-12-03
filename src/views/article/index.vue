@@ -20,9 +20,10 @@
       @changePage="changePage"
     >
       <el-button slot="buttons" type="success" icon="el-icon-plus">新增</el-button>
-      <el-table-column slot="operation" label="操作">
+      <el-table-column slot="operation" label="操作" width="180" align="center">
         <template slot-scope="scope">
           <el-button type="text" @click="setItem(scope.row, 'delete')">删除</el-button>
+          <el-button type="text" @click="setItem(scope.row, 'edit')">编辑</el-button>
           <el-button type="text" @click="setItem(scope.row, 'detail')">查看</el-button>
         </template>
       </el-table-column>
@@ -106,6 +107,12 @@ export default {
           this.$router.push({ name: 'ArticleDetail', params: {
             id: item.id
           }})
+          break
+        case 'edit':
+          // this.$router.push({ name: 'ArticleEdit', params: {
+          //   id: item.id
+          // }})
+          this.$router.push(`/article/edit/${item.id}`)
           break
         default:
           break

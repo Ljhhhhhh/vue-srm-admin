@@ -57,6 +57,7 @@ const mutations = {
   },
 
   UPDATE_VISITED_VIEW: (state, view) => {
+    console.log(state, view, '!!!!!!')
     for (let v of state.visitedViews) {
       if (v.path === view.path) {
         v = Object.assign(v, view)
