@@ -50,14 +50,20 @@
           v-bind="setAttrs(column)"
         >
           <template slot-scope="scope">
-            <img
+            <!-- <img
               class="srm-table_img"
               :src="scope.row[column.prop]"
               :width="column.width || '120px'"
               :height="column.height || 'auto'"
               alt="img"
               @click="imgClick(scope.row[column.prop], column.previewWidth)"
-            >
+            > -->
+            <el-image
+              class="srm-table_img"
+              :style="{width: column.width || '120px', height: column.height || 'auto'}"
+              :src="scope.row[column.prop]"
+              :preview-src-list="[scope.row[column.prop]]"
+            />
           </template>
         </el-table-column>
         <el-table-column
@@ -94,22 +100,22 @@
         @current-change="currentChange"
       />
     </div>
-    <image-preview
+    <!-- <image-preview
       :width="previewWidth"
       :current-img.sync="imgSrc"
-    />
+    /> -->
   </div>
 </template>
 <script>
 import Render from './render'
-import ImagePreview from '@/components/ImagePreview'
+// import ImagePreview from '@/components/ImagePreview'
 import { scrollTo } from '@/utils/scroll-to'
 
 export default {
   name: 'SrmTable',
   components: {
-    Render,
-    ImagePreview
+    Render
+    // ImagePreview
   },
   props: {
     // 列表数据
@@ -165,9 +171,9 @@ export default {
     return {
       downloadLoading: false,
       // 当前预览图片的地址
-      imgSrc: '',
+      // imgSrc: '',
       // 当前预览图片的宽度
-      previewWidth: '50%',
+      // previewWidth: '50%',
       // 当前选择项的集合
       selections: []
     }
@@ -179,10 +185,10 @@ export default {
   },
   methods: {
     // 图片预览
-    imgClick(src, previewWidth) {
-      this.imgSrc = src
-      this.previewWidth = previewWidth || '50%'
-    },
+    // imgClick(src, previewWidth) {
+    //   this.imgSrc = src
+    //   this.previewWidth = previewWidth || '50%'
+    // },
     // 已选项
     selectionChange(selections) {
       this.selections = selections

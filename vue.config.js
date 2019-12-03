@@ -8,13 +8,13 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 const cdn = {
   // //unpkg.com/element-ui/lib/theme-chalk/index.css
-  css: ['https://cdn.bootcss.com/element-ui/2.7.2/theme-chalk/index.css '],
+  css: ['https://cdn.bootcss.com/element-ui/2.13.0/theme-chalk/index.css '],
   js: [
     'https://cdn.bootcss.com/vue/2.6.10/vue.min.js',
     'https://cdn.bootcss.com/vue-router/3.0.6/vue-router.min.js',
     'https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js',
-    // 'https://unpkg.com/element-ui@2.7.2/lib/index.js',
-    'https://cdn.bootcss.com/element-ui/2.7.2/index.js',
+    // 'https://unpkg.com/element-ui@2.13.0/lib/index.js',
+    'https://cdn.bootcss.com/element-ui/2.13.0/index.js',
     'https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js',
     'https://cdn.bootcss.com/js-cookie/2.2.0/js.cookie.min.js'
   ]

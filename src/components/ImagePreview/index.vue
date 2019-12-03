@@ -5,6 +5,7 @@
     :width="width"
   >
     <img :src="currentImg" alt="img" width="100%">
+
   </el-dialog>
 </template>
 <script>
@@ -17,6 +18,14 @@ export default {
     currentImg: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    imageList() {
+      if (this.currentImg) {
+        return [this.currentImg]
+      }
+      return []
     }
   },
   methods: {
