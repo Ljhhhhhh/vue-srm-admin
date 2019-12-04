@@ -9,7 +9,7 @@
       :size="size"
       :label-width="labelWitdh"
     >
-      <el-row>
+      <el-row :gutter="gutter">
         <template v-for="(item, index) in _formItems">
           <component
             :is="inline ? 'span' : 'el-col'"
@@ -103,6 +103,10 @@ export default {
       type: Boolean,
       default: true
     },
+    gutter: {
+      type: Number,
+      default: 24
+    },
     btnCol: {
       type: Number,
       default: 24
@@ -131,6 +135,7 @@ export default {
       return this.$attrs['show-message'] !== false
     },
     inline() {
+      console.log(this.$attrs.inline !== false, 'this.$attrs.inline')
       return this.$attrs.inline !== false
     }
   },
@@ -230,6 +235,7 @@ export default {
       this.$emit('after-reset')
     },
     goBack() {
+      // TODO:: 返回确认提示框
       this.$router.go(-1)
     }
   }
