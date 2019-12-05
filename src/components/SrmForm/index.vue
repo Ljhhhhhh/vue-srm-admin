@@ -235,7 +235,7 @@ export default {
         })
       }
       this.Model = JSON.parse(JSON.stringify(this.originModel))
-      this.$emit('update:merge-form', this.Model)
+      this.$emit('change', this.Model)
       this.$emit('after-reset')
     },
     goBack() {

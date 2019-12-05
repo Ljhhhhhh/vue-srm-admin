@@ -1,10 +1,10 @@
 <template>
   <div>
     <srm-form
+      v-model="searchForm"
       form-name="searchForm"
       :inline="true"
       :form-items="queryColumns"
-      :merge-form.sync="searchForm"
       :show-back="false"
       submit-msg="搜索"
       @submit="refresh"

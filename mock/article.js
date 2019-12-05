@@ -127,7 +127,6 @@ export default [
     response: _ => {
       console.log(_.body.id, '------')
       const { id, ...rest } = _.body
-      console.log({ ...rest }, '...rest')
       List = List.map(article => {
         if (article.id === +id) {
           article = Object.assign({}, article, { ...rest })

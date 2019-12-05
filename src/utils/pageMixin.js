@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie'
 import settings from '@/settings'
 import SrmDialogCheck from '@/components/SrmDialogCheck'
 export default {
@@ -22,10 +21,15 @@ export default {
     }
   },
   activated() {
-    if (Cookies.get(settings.needRefresh) && typeof this.getList === 'function') {
+    console.log(this.$route.path, 'state')
+    if (this.$store.state.page.needRefreshRouteList.includes(this.$route.path)) {
+      this.$store.commit('page/REMOVE_ROUTE', this.$route.path)
       this.getList()
-      Cookies.remove(settings.needRefresh)
     }
+    // if (Cookies.get(settings.needRefresh) && typeof this.getList === 'function') {
+    //   this.getList()
+    //   Cookies.remove(settings.needRefresh)
+    // }
   },
   mounted() {
     this.getList()

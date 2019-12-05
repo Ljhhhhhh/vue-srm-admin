@@ -3,6 +3,7 @@
     <srm-form
       v-model="detailForm"
       form-name="detailForm"
+      :reset-msg="false"
       :form-items="formItems"
       :inline="false"
       @submit="submit"
@@ -19,13 +20,13 @@
 import { fetchArticle, updateArticle } from 'api/article'
 import { statusMap } from './statusMap'
 import Tinymce from '@/components/Tinymce'
-// import { proxyProp } from '../../../../../work/srm-admin/src/utils/proxyProp'
-import { proxyProp } from 'utils/proxyProp'
+import detailMixin from 'utils/detailMixin'
 export default {
   name: 'ArticleEdit',
   components: {
     Tinymce
   },
+  mixins: [detailMixin],
   data() {
     return {
       id: null,
@@ -57,12 +58,12 @@ export default {
         {
           tag: 'input',
           itemAttrs: {
-            label: '审阅',
+            label: '审阅人',
             col: 6
           },
           attrs: {
             key: 'reviewer',
-            placeholder: '请输入审阅'
+            placeholder: '请输入审阅人'
           }
         },
         {
@@ -88,9 +89,6 @@ export default {
         },
         {
           slot: 'content',
-          // attrs: {
-          //   key: 'slotCheckBox'
-          // },
           itemAttrs: {
             label: '文章详情'
           }
@@ -100,7 +98,6 @@ export default {
   },
   mounted() {
     this.tempRoute = Object.assign({}, this.$route)
-    this.detailForm = proxyProp(this.detailForm)
     this.getDetail()
   },
   methods: {
@@ -127,6 +124,10 @@ export default {
       const data = Object.assign({}, this.detailForm, { id: this.id })
       const { code, data: result } = await updateArticle(data)
       console.log('submit', code, result)
+      if (code === 20000) {
+        this.$message.success('文章更新成功')
+        this.goListWithRefresh('/article/list')
+      }
     }
   }
 }

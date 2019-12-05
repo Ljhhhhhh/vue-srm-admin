@@ -3,11 +3,10 @@
     <el-upload
       v-if="!$attrs.multiple"
       class="image-uploader"
-      action="http://192.168.10.181:30006/oss/upload"
+      :action="action"
       :show-file-list="showFileList"
       :on-success="uploadSuccess"
       :before-upload="beforeUpload"
-      :headers="headers"
       v-bind="$attrs"
     >
       <div class="upload-wrap" :style="imgStyle">
@@ -24,10 +23,9 @@
     <el-upload
       v-else
       :before-upload="beforeUpload"
-      :headers="headers"
       v-bind="$attrs"
       :file-list="fileList"
-      action="http://192.168.10.181:30006/oss/upload"
+      :action="action"
       list-type="picture-card"
       :on-preview="handlePictureCardPreview"
       :on-remove="handleRemove"
@@ -49,7 +47,7 @@
   </span>
 </template>
 <script>
-import setting from '@/settings'
+// import setting from '@/settings'
 import ImagePreview from '@/components/ImagePreview'
 export default {
   name: 'SrmUpload',
@@ -83,15 +81,13 @@ export default {
     },
     showFileList: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data() {
     return {
+      action: 'https://httpbin.org/post',
       init: false,
-      headers: {
-        platform: setting.platform
-      },
       src: '',
       previewSrc: '',
       fileList: []
@@ -182,7 +178,6 @@ export default {
       }
     },
     uploadSuccess(response, file, fileList) {
-      console.log(fileList, 'filelist')
       if (this.$attrs.multiple) {
         // const oldList = [...this.src]
         // const list = fileList.filter(item => item.response)
