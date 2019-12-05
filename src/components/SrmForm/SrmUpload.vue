@@ -4,7 +4,7 @@
       v-if="!$attrs.multiple"
       class="image-uploader"
       action="http://192.168.10.181:30006/oss/upload"
-      :show-file-list="false"
+      :show-file-list="showFileList"
       :on-success="uploadSuccess"
       :before-upload="beforeUpload"
       :headers="headers"
@@ -18,6 +18,9 @@
         />
       </div>
     </el-upload>
+    <!--
+      :on-success="uploadSuccess"
+     -->
     <el-upload
       v-else
       :before-upload="beforeUpload"
@@ -31,6 +34,11 @@
       :on-exceed="onExceed"
       :on-change="changeImg"
     >
+      <!-- <div class="upload-wrap">
+        <i
+          class="el-icon-plus"
+        />
+      </div> -->
       <i class="el-icon-plus" />
     </el-upload>
     <div
@@ -72,10 +80,15 @@ export default {
     showMsg: {
       type: Boolean,
       default: true
+    },
+    showFileList: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
+      init: false,
       headers: {
         platform: setting.platform
       },
@@ -85,6 +98,15 @@ export default {
     }
   },
   computed: {
+    // fileList() {
+    //   if (this.$attrs.multiple && Array.isArray(this.src)) {
+    //     return this.src.map((item, idx) => ({
+    //       name: idx,
+    //       url: item
+    //     }))
+    //   }
+    //   return []
+    // },
     maxSizeWithUnit() {
       if (this.maxSize > 1024) {
         return (this.maxSize / 1024).toFixed(2) + 'MB'
@@ -106,13 +128,16 @@ export default {
       } else {
         this.src = src
       }
+      if (this.init) return
       if (this.$attrs.multiple && Array.isArray(this.src)) {
-        console.log(this.src, 'src')
-        const list = [...this.src]
-        this.fileList = list.map((item, idx) => ({
-          name: idx,
-          url: item
-        }))
+        this.src.map((src, idx) => {
+          if (!this.fileList.find(v => v.url === src)) {
+            this.fileList.push({
+              name: idx,
+              url: src
+            })
+          }
+        })
       } else {
         this.fileList = []
       }
@@ -131,6 +156,7 @@ export default {
       this.$emit('update', this.src)
     },
     beforeUpload: function(file) {
+      this.init = true // 标志位
       const ext = this.ext
       const maxSize = this.maxSize
       const isOkExt = ext.indexOf(file.name.substring(file.name.lastIndexOf('.')).toLocaleLowerCase()) >= 0
@@ -146,6 +172,7 @@ export default {
       return true
     },
     changeImg(file, fileList) {
+      console.log(fileList, 'fileList')
       const flag = fileList.every(img => {
         return img.response || img.url.startsWith('https://')
       })
@@ -155,8 +182,17 @@ export default {
       }
     },
     uploadSuccess(response, file, fileList) {
+      console.log(fileList, 'filelist')
       if (this.$attrs.multiple) {
-        // 多图上传通过`changeImg`处理
+        // const oldList = [...this.src]
+        // const list = fileList.filter(item => item.response)
+        // if (list.length) {
+        //   const newList = list.map(item => {
+        //     return item.response.data.filePath
+        //   })
+        //   this.src = Array.from(new Set(oldList.concat(newList)))
+        //   // this.src.push(newList)
+        // }
       } else {
         const newUrl = response.data.filePath
         this.src = newUrl
@@ -178,6 +214,14 @@ export default {
     line-height: 1;
     font-size: 0;
   }
+  // .avatar-uploader-icon {
+  //   font-size: 28px;
+  //   color: #8c939d;
+  //   width: 120px;
+  //   height: 120px;
+  //   line-height: 120px;
+  //   text-align: center;
+  // }
 }
 .srm-upload_container /deep/ {
   .upload-wrap{

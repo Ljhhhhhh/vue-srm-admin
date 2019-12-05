@@ -8,8 +8,9 @@
       :inline="inline"
       :size="size"
       :label-width="labelWitdh"
+      class="srm-form"
     >
-      <el-row :gutter="gutter">
+      <el-row>
         <template v-for="(item, index) in _formItems">
           <component
             :is="inline ? 'span' : 'el-col'"
@@ -38,18 +39,24 @@
         <component :is="inline ? 'span' : 'el-col'" :span="btnCol">
           <el-form-item>
             <slot name="buttons" />
-            <el-button v-if="!!submitMsg" type="primary" @click="handleSubmit">{{ submitMsg }}</el-button>
-            <el-button v-if="resetMsg" type="info" @click="handleReset">{{ resetMsg }}</el-button>
+            <el-button v-if="!!submitMsg" @click="handleSubmit">{{ submitMsg }}</el-button>
+            <el-button v-if="resetMsg" @click="handleReset">{{ resetMsg }}</el-button>
+            <!-- <el-button v-if="showBack" :disabled="false" @click="goBack">返回</el-button> -->
             <span v-if="showBack" class="el-button el-button--small" @click="goBack">返回</span>
           </el-form-item>
         </component>
 
       </el-row>
+    <!-- :class="item.itemAttrs.className" -->
     </el-form>
   </div>
 </template>
 
 <script>
+/*
+  attrs 中转给el-form-item的各类属性
+  itemAttrs 额外增加的各类属性
+*/
 import componentMap from './util'
 import SrmSelect from './SrmSelect'
 import SrmRadioGroup from './SrmRadioGroup'
@@ -69,10 +76,6 @@ export default {
     SrmValueRegio,
     SrmUpload
   },
-  model: {
-    prop: 'value',
-    event: 'change'
-  },
   props: {
     formItems: {
       type: Array,
@@ -91,13 +94,9 @@ export default {
       default: 'auto'
     },
     // 传入mergeForm允许父组件修改内部Model对象
-    // mergeForm: {
-    //   type: Object,
-    //   default: () => {}
-    // },
-    formName: {
-      type: String,
-      required: true
+    mergeForm: {
+      type: Object,
+      default: () => {}
     },
     size: {
       type: String,
@@ -106,10 +105,6 @@ export default {
     showBack: {
       type: Boolean,
       default: true
-    },
-    gutter: {
-      type: Number,
-      default: 24
     },
     btnCol: {
       type: Number,
@@ -129,8 +124,7 @@ export default {
       // this.Model中的值改变触发computed
       let _formItems = []
       _formItems = this.formItems.map(item => {
-        // this.$emit(`update:merge-form`, this.Model)
-        this.$emit('change', this.Model)
+        this.$emit('update:merge-form', this.Model)
         return this.computeFormItem(item, this.Model)
       }
       )
@@ -165,20 +159,20 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    mergeForm: {
+      handler() {
+        this.mergeModel()
+      },
+      deep: true,
+      immediate: true
     }
-    // mergeForm: {
-    //   handler() {
-    //     this.mergeModel()
-    //   },
-    //   deep: true,
-    //   immediate: true
-    // }
   },
   mounted() {
     // 代理父组件的mergeForm属性
-    const parentComponent = findComponentUpwardByProp(this, [this.formName])
+    const parentComponent = findComponentUpwardByProp(this, 'mergeForm')
     if (parentComponent) {
-      parentComponent[this.formName] = proxyProp(parentComponent[this.formName])
+      parentComponent.mergeForm = proxyProp(parentComponent.mergeForm)
     } else {
       throw new Error('can not find parentComponent')
     }
@@ -205,9 +199,9 @@ export default {
       // form-item 配置
       return item
     },
-    // mergeModel() {
-    //   Object.assign(this.Model, this.mergeForm)
-    // },
+    mergeModel() {
+      Object.assign(this.Model, this.mergeForm)
+    },
     // 提交按钮
     handleSubmit() {
       // 验证SrmValueRegio的值是否合法
@@ -220,6 +214,8 @@ export default {
       this.$refs[form].validate(async valid => {
         if (valid) {
           try {
+            // const res = await this.api(this.Model)
+            // this.$emit('after-submit', res)
             this.$emit('submit')
           } catch (e) {
             console.log(e)
@@ -239,10 +235,21 @@ export default {
       this.$emit('after-reset')
     },
     goBack() {
-      // TODO:: 返回确认提示框
+      // this.$router.push({ path: '/brand/list', params: {
+      //   refresh: true
+      // }})
       this.$router.go(-1)
     }
   }
 }
 </script>
-
+<style lang="scss" scoped>
+  .container /deep/ .srm-form .el-button--default{
+    padding: 9px 50px;
+    background: #999;
+    color: #FFF;
+    &:hover{
+      background: #333;
+    }
+  }
+</style>

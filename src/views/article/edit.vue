@@ -1,26 +1,26 @@
 <template>
   <div>
     <srm-form
-      form-name="detail"
+      v-model="detailForm"
+      form-name="detailForm"
       :form-items="formItems"
-      :merge-form.sync="detail"
-      :reset-msg="false"
       :inline="false"
       @submit="submit"
     >
+      <!-- :reset-msg="false" -->
+      <!-- :merge-form.sync="detailForm" -->
       <template v-slot:content prop="content">
-        <Tinymce ref="editor" v-model="detail.content" :height="400" />
+        <Tinymce ref="editor" v-model="detailForm.content" :height="400" />
       </template>
-      <!-- <el-form-item prop="content" style="margin-bottom: 30px;">
-        <Tinymce ref="editor" v-model="postForm.content" :height="400" />
-      </!--> -->
     </srm-form>
   </div>
 </template>
 <script>
-import { fetchArticle } from 'api/article'
+import { fetchArticle, updateArticle } from 'api/article'
 import { statusMap } from './statusMap'
 import Tinymce from '@/components/Tinymce'
+// import { proxyProp } from '../../../../../work/srm-admin/src/utils/proxyProp'
+import { proxyProp } from 'utils/proxyProp'
 export default {
   name: 'ArticleEdit',
   components: {
@@ -30,7 +30,7 @@ export default {
     return {
       id: null,
       tempRoute: {},
-      detail: {},
+      detailForm: {},
       formItems: [
         {
           tag: 'input',
@@ -98,14 +98,10 @@ export default {
       ]
     }
   },
-  created() {
+  mounted() {
     this.tempRoute = Object.assign({}, this.$route)
+    this.detailForm = proxyProp(this.detailForm)
     this.getDetail()
-    // const id = this.$route.params.id
-    // if (this.id !== id) {
-    //   this.id = id
-    //   this.getDetail()
-    // }
   },
   methods: {
     async getDetail() {
@@ -115,7 +111,9 @@ export default {
       this.setTagsViewTitle(title)
       const { code, data } = await fetchArticle(this.id)
       if (code === 20000) {
-        this.detail = data
+        // this.detailForm = {}
+        Object.assign(this.detailForm, { ...data })
+        // this.detailForm = proxyProp(this.detailForm)
       } else {
         this.$message.error('获取详情失败')
       }
@@ -125,8 +123,10 @@ export default {
       document.title = title
       this.$store.dispatch('tagsView/updateVisitedView', route)
     },
-    submit() {
-      console.log('submit')
+    async submit() {
+      const data = Object.assign({}, this.detailForm, { id: this.id })
+      const { code, data: result } = await updateArticle(data)
+      console.log('submit', code, result)
     }
   }
 }

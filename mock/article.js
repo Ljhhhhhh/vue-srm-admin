@@ -69,6 +69,10 @@ export default [
           }
         }
       }
+      return {
+        code: 20001,
+        data: '没有该数据'
+      }
     }
   },
 
@@ -121,6 +125,15 @@ export default [
     url: '/article/update',
     type: 'post',
     response: _ => {
+      console.log(_.body.id, '------')
+      const { id, ...rest } = _.body
+      console.log({ ...rest }, '...rest')
+      List = List.map(article => {
+        if (article.id === +id) {
+          article = Object.assign({}, article, { ...rest })
+        }
+        return article
+      })
       return {
         code: 20000,
         data: 'success'
