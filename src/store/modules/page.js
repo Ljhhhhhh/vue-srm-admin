@@ -6,6 +6,7 @@ const state = {
 
 const mutations = {
   ADD_ROUTE: (state, route) => {
+    if (state.needRefreshRouteList.includes(route)) return
     state.needRefreshRouteList.push(route)
     router.replace(route)
   },

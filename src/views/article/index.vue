@@ -19,7 +19,7 @@
       :loading="listLoading"
       @changePage="changePage"
     >
-      <el-button slot="buttons" type="success" icon="el-icon-plus">新增</el-button>
+      <el-button slot="buttons" type="success" icon="el-icon-plus" @click="setItem({}, 'create')">新增</el-button>
       <el-table-column slot="operation" label="操作" width="180" align="center">
         <template slot-scope="scope">
           <el-button type="text" @click="setItem(scope.row, 'delete')">删除</el-button>
@@ -109,10 +109,10 @@ export default {
           }})
           break
         case 'edit':
-          // this.$router.push({ name: 'ArticleEdit', params: {
-          //   id: item.id
-          // }})
           this.$router.push(`/article/edit/${item.id}`)
+          break
+        case 'create':
+          this.$router.push('/article/create')
           break
         default:
           break

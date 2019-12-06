@@ -93,27 +93,27 @@ export default [
   },
 
   {
-    url: '/article/pv',
-    type: 'get',
-    response: _ => {
-      return {
-        code: 20000,
-        data: {
-          pvData: [
-            { key: 'PC', pv: 1024 },
-            { key: 'mobile', pv: 1024 },
-            { key: 'ios', pv: 1024 },
-            { key: 'android', pv: 1024 }
-          ]
-        }
-      }
-    }
-  },
-
-  {
     url: '/article/create',
     type: 'post',
     response: _ => {
+      const { title, content, status, author, reviewer, image_uri } = _.body
+      List.unshift(Mock.mock({
+        id: '@increment',
+        timestamp: +Mock.Random.date('T'),
+        author,
+        reviewer,
+        title: title,
+        content_short: 'mock data',
+        content: content,
+        forecast: '@float(0, 100, 2, 2)',
+        importance: '@integer(1, 3)',
+        'type|1': ['CN', 'US', 'JP', 'EU'],
+        status,
+        display_time: Date.now(),
+        comment_disabled: true,
+        pageviews: '@integer(300, 5000)',
+        image_uri
+      }))
       return {
         code: 20000,
         data: 'success'
@@ -125,7 +125,6 @@ export default [
     url: '/article/update',
     type: 'post',
     response: _ => {
-      console.log(_.body.id, '------')
       const { id, ...rest } = _.body
       List = List.map(article => {
         if (article.id === +id) {
@@ -136,6 +135,16 @@ export default [
       return {
         code: 20000,
         data: 'success'
+      }
+    }
+  },
+  {
+    url: '/upload',
+    type: 'post',
+    response: _ => {
+      return {
+        code: 20000,
+        data: 'http://img.cixi518.com/ljh_logo.jpeg'
       }
     }
   }

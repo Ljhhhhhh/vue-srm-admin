@@ -26,7 +26,14 @@ const ArticleRouter = {
       hidden: true
     },
     {
-      path: 'edit/:id(\\d+)',
+      path: 'create',
+      component: () => import('@/views/article/edit'),
+      name: 'ArticleCreate',
+      meta: { title: '创建文章', noCache: true, activeMenu: '/article/list' },
+      hidden: true
+    },
+    {
+      path: 'edit/:id',
       component: () => import('@/views/article/edit'),
       name: 'ArticleEdit',
       meta: { title: '文章编辑', noCache: true, activeMenu: '/article/list' },

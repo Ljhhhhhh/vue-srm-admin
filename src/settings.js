@@ -1,7 +1,6 @@
 module.exports = {
 
   title: 'Vue Admin Template',
-  platform: 'srm_web_manager',
 
   /**
    * @type {boolean} true | false
@@ -15,7 +14,6 @@ module.exports = {
    * @description Whether show the logo in sidebar
    */
   sidebarLogo: false,
-  needRefresh: '__needRefresh__',
   listQuery: {
     page: 1,
     pageSize: 10

@@ -47,8 +47,8 @@
   </span>
 </template>
 <script>
-// import setting from '@/settings'
 import ImagePreview from '@/components/ImagePreview'
+import { uploadAction } from 'api/upload'
 export default {
   name: 'SrmUpload',
   components: {
@@ -86,7 +86,7 @@ export default {
   },
   data() {
     return {
-      action: 'https://httpbin.org/post',
+      action: uploadAction,
       init: false,
       src: '',
       previewSrc: '',
@@ -148,7 +148,7 @@ export default {
       this.previewSrc = src.url
     },
     handleRemove(file, fileList) {
-      this.src = fileList.map(item => item.url || item.response.data.filePath)
+      this.src = fileList.map(item => item.url || item.data)
       this.$emit('update', this.src)
     },
     beforeUpload: function(file) {
@@ -168,12 +168,11 @@ export default {
       return true
     },
     changeImg(file, fileList) {
-      console.log(fileList, 'fileList')
       const flag = fileList.every(img => {
         return img.response || img.url.startsWith('https://')
       })
       if (flag) {
-        const src = fileList.map(img => (img.response && img.response.data && img.response.data.filePath) || img.url)
+        const src = fileList.map(img => img.data || img.url)
         this.$emit('update', src)
       }
     },
@@ -189,7 +188,7 @@ export default {
         //   // this.src.push(newList)
         // }
       } else {
-        const newUrl = response.data.filePath
+        const newUrl = response.data
         this.src = newUrl
       }
       this.$emit('update', this.src)
@@ -221,7 +220,6 @@ export default {
 .srm-upload_container /deep/ {
   .upload-wrap{
     width: 120px;
-    height: 120px;
     i, img, video {
       display: block;
       width: 100%;
@@ -231,6 +229,10 @@ export default {
       align-items: center;
       font-size: 28px;
       color: #8c939d;
+    }
+    i{
+      width: 120px;
+      height: 120px;
     }
   }
 }

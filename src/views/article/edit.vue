@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-import { fetchArticle, updateArticle } from 'api/article'
+import { fetchArticle, updateArticle, createArticle } from 'api/article'
 import { statusMap } from './statusMap'
 import Tinymce from '@/components/Tinymce'
 import detailMixin from 'utils/detailMixin'
@@ -29,8 +29,6 @@ export default {
   mixins: [detailMixin],
   data() {
     return {
-      id: null,
-      tempRoute: {},
       detailForm: {},
       formItems: [
         {
@@ -96,36 +94,36 @@ export default {
       ]
     }
   },
+  computed: {
+    submitFn() {
+      return this.id ? updateArticle : createArticle
+    }
+  },
   mounted() {
-    this.tempRoute = Object.assign({}, this.$route)
-    this.getDetail()
+    this.id = this.$route.params && this.$route.params.id || null
+    if (this.id) {
+      this.getDetail()
+    }
   },
   methods: {
     async getDetail() {
-      this.id = this.$route.params.id
-      console.log('getDetail')
-      const title = `编辑文章-${this.id}`
-      this.setTagsViewTitle(title)
       const { code, data } = await fetchArticle(this.id)
       if (code === 20000) {
-        // this.detailForm = {}
-        Object.assign(this.detailForm, { ...data })
-        // this.detailForm = proxyProp(this.detailForm)
+        Object.assign(this.detailForm, data)
       } else {
-        this.$message.error('获取详情失败')
+        this.$router.back()
       }
     },
-    setTagsViewTitle(title) {
-      const route = Object.assign({}, this.tempRoute, { title })
-      document.title = title
-      this.$store.dispatch('tagsView/updateVisitedView', route)
-    },
     async submit() {
-      const data = Object.assign({}, this.detailForm, { id: this.id })
-      const { code, data: result } = await updateArticle(data)
-      console.log('submit', code, result)
+      let msg = '文章更新成功'
+      const data = Object.assign({}, this.detailForm)
+      if (this.id) {
+        data.id = this.id
+        msg = '创建文章成功'
+      }
+      const { code } = await this.submitFn(data)
       if (code === 20000) {
-        this.$message.success('文章更新成功')
+        this.$message.success(msg)
         this.goListWithRefresh('/article/list')
       }
     }
