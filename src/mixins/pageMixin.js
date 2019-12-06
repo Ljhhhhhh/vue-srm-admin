@@ -4,10 +4,11 @@ export default {
   data() {
     return {
       listQuery: { ...settings.listQuery }, // 扩展运算，以免影响settings中的值
-      total: 0,
-      listLoading: false,
-      fetchList: null,
-      tableData: [],
+      total: 0, // 总条数
+      listLoading: false, // 是否加载中
+      fetchList: null, // 请求接口函数
+      tableData: [], // 获取数据
+      searchForm: {}, // 筛选条件
       checkDialogItem: undefined // 当前选择项
     }
   },
@@ -21,15 +22,10 @@ export default {
     }
   },
   activated() {
-    console.log(this.$route.path, 'state')
     if (this.$store.state.page.needRefreshRouteList.includes(this.$route.path)) {
       this.$store.commit('page/REMOVE_ROUTE', this.$route.path)
       this.getList()
     }
-    // if (Cookies.get(settings.needRefresh) && typeof this.getList === 'function') {
-    //   this.getList()
-    //   Cookies.remove(settings.needRefresh)
-    // }
   },
   mounted() {
     this.getList()
@@ -50,9 +46,10 @@ export default {
     getList() {
       if (!this.fetchList || typeof this.fetchList !== 'function') {
         this.$message.error('请把列表接口函数赋值给fetchList')
+        return
       }
       this.listLoading = true
-      const query = this.$formattQuery(this.listQuery, this.searchForm)
+      const query = this.$filterEmptyValue(this.listQuery, this.searchForm)
       this.fetchList(query).then(response => {
         this.tableData = response.data.items
         this.total = response.data.total

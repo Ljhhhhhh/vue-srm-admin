@@ -11,8 +11,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
-import dayjs from 'dayjs'
-import mixins from 'utils/mixins'
+import 'utils/global-utils'
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -36,25 +35,10 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
-// set ElementUI lang to EN
 Vue.use(ElementUI, {
   locale,
   size: 'small'
 })
-
-Vue.mixin(mixins)
-
-Vue.prototype.dayjs = dayjs
-// 合并两个对象，并过滤掉值为空的属性
-Vue.prototype.$formattQuery = (...rest) => {
-  const query = Object.assign({}, ...rest)
-  for (const key in query) {
-    if (!query[key] && query[key] !== 0 && typeof query[key] !== 'boolean') {
-      delete query[key]
-    }
-  }
-  return query
-}
 
 // register global utility filters
 Object.keys(filters).forEach(key => {

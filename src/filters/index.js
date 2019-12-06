@@ -1,5 +1,6 @@
-// import parseTime, formatTime and set to filter
-export { parseTime, formatTime } from '@/utils'
+import dayjs from 'dayjs'
+// import parseTime and set to filter
+export { parseTime } from '@/utils'
 
 /**
  * Show plural label if time is plural number
@@ -65,4 +66,12 @@ export function toThousandFilter(num) {
  */
 export function uppercaseFirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+export function formatTime(unix) {
+  return dayjs(unix).format('YYYY-MM-DD hh:mm:ss')
+}
+
+export function formatDay(unix) {
+  return dayjs(unix).format('YYYY-MM-DD')
 }

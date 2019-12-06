@@ -18,9 +18,9 @@
 </template>
 <script>
 import { fetchArticle, updateArticle, createArticle } from 'api/article'
-import { statusMap } from './statusMap'
+import { statusMap } from 'assets/data-maps'
 import Tinymce from '@/components/Tinymce'
-import detailMixin from 'utils/detailMixin'
+import detailMixin from '@/mixins/detailMixin'
 export default {
   name: 'ArticleEdit',
   components: {

@@ -40,8 +40,8 @@ import {
   fetchList,
   deleteArticle
 } from '@/api/article'
-import { statusMap } from './statusMap'
-import pageMixin from 'utils/pageMixin'
+import { statusMap } from 'assets/data-maps'
+import pageMixin from '@/mixins/pageMixin'
 export default {
   name: 'ArticleList',
   mixins: [pageMixin],
@@ -53,7 +53,7 @@ export default {
         { type: 'index', label: '序号', width: 50 },
         { prop: 'author', label: '作者', width: 100 },
         { prop: 'title', label: '标题', 'show-overflow-tooltip': true, width: 300 },
-        { prop: 'image_uri', label: '封面', isImg: true },
+        { prop: 'image_uri', label: '封面', isImg: true, width: 120 },
         { prop: 'pageviews', label: '阅读量' },
         { prop: 'status', label: '当前状态', formatter: this.statusFormat },
         { prop: 'display_time', label: '发布时间' },
@@ -90,8 +90,8 @@ export default {
             options: statusMap
           }
         }
-      ],
-      searchForm: {}
+      ]
+
     }
   },
   methods: {

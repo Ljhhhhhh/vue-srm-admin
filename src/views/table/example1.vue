@@ -25,8 +25,8 @@
 import {
   fetchList
 } from '@/api/article'
-import { statusMap } from './statusMap'
-import pageMixin from 'utils/pageMixin'
+import { statusMap } from 'assets/data-maps'
+import pageMixin from '@/mixins/pageMixin'
 export default {
   name: 'TableExample1',
   mixins: [pageMixin],
