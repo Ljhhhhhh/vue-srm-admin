@@ -19,7 +19,7 @@ const ArticleRouter = {
       meta: { title: '文章管理' }
     },
     {
-      path: 'detail',
+      path: 'detail/:id',
       component: () => import('@/views/article/detail'),
       name: 'ArticleDetail',
       meta: { title: '文章详情' },
@@ -29,14 +29,14 @@ const ArticleRouter = {
       path: 'create',
       component: () => import('@/views/article/edit'),
       name: 'ArticleCreate',
-      meta: { title: '创建文章', noCache: true, activeMenu: '/article/list' },
+      meta: { title: '创建文章', activeMenu: '/article/list' },
       hidden: true
     },
     {
       path: 'edit/:id',
       component: () => import('@/views/article/edit'),
       name: 'ArticleEdit',
-      meta: { title: '文章编辑', noCache: true, activeMenu: '/article/list' },
+      meta: { title: '文章编辑', activeMenu: '/article/list' },
       hidden: true
     }
   ]

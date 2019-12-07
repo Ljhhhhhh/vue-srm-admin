@@ -239,8 +239,13 @@ export default {
       this.$emit('after-reset')
     },
     goBack() {
-      // TODO:: 返回确认提示框
-      this.$router.go(-1)
+      this.$confirm('确认返回上一页？', '返回', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.$router.go(-1)
+      })
     }
   }
 }
