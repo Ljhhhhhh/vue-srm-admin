@@ -9,6 +9,7 @@
   </el-dialog>
 </template>
 <script>
+// 推荐使用el-image替代
 export default {
   props: {
     width: {

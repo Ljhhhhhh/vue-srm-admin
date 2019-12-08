@@ -20,7 +20,6 @@ for (let i = 0; i < count; i++) {
     'type|1': ['CN', 'US', 'JP', 'EU'],
     'status|1': [3, 1, 2],
     display_time: '@date()',
-    comment_disabled: true,
     pageviews: '@integer(300, 5000)',
     image_uri: "@image('200x100', '#50B347', '#FFF', 'png', 'IMG')"
   }))
@@ -78,16 +77,20 @@ export default [
 
   {
     url: '/article/delete',
-    type: 'get',
+    type: 'post',
     response: config => {
-      const { id } = config.query
-      if (List.find(article => article.id === +id)) {
-        List = List.filter(article => article.id !== +id)
-        count--
-        return {
-          code: 20000,
-          data: 'success'
-        }
+      const { id } = config.body
+      let ids = id
+      if (!Array.isArray(id)) {
+        ids = [id]
+      }
+      List = List.filter(article => {
+        return ids.findIndex(id => +id === article.id) < 0
+      })
+      count = List.length
+      return {
+        code: 20000,
+        data: 'success'
       }
     }
   },
@@ -110,7 +113,6 @@ export default [
         'type|1': ['CN', 'US', 'JP', 'EU'],
         status,
         display_time: Date.now(),
-        comment_disabled: true,
         pageviews: '@integer(300, 5000)',
         image_uri
       }))

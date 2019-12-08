@@ -90,10 +90,6 @@ div:focus {
   margin-right: 15px;
 }
 
-.container{
-  padding: 25px;
-}
-
 #app /deep/ .category-tree_wrap {
   height: auto;
   max-height: 360px;
@@ -121,8 +117,13 @@ div:focus {
 .h15{
   width: 1px;
   height: 15px;
+  overflow: hidden;
 }
 
 .require-visible /deep/ .el-form-item__label::before {
   display: none;
+}
+
+.el-card + .el-card {
+  margin-top: 15px;
 }

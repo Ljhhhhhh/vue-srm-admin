@@ -8,8 +8,6 @@
       :inline="false"
       @submit="submit"
     >
-      <!-- :reset-msg="false" -->
-      <!-- :merge-form.sync="detailForm" -->
       <template v-slot:content prop="content">
         <Tinymce ref="editor" v-model="detailForm.content" :height="400" />
       </template>

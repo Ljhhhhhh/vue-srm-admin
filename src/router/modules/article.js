@@ -22,7 +22,7 @@ const ArticleRouter = {
       path: 'detail/:id',
       component: () => import('@/views/article/detail'),
       name: 'ArticleDetail',
-      meta: { title: '文章详情' },
+      meta: { title: '文章详情', noCache: true },
       hidden: true
     },
     {
@@ -36,7 +36,7 @@ const ArticleRouter = {
       path: 'edit/:id',
       component: () => import('@/views/article/edit'),
       name: 'ArticleEdit',
-      meta: { title: '文章编辑', activeMenu: '/article/list' },
+      meta: { title: '文章编辑', noCache: true, activeMenu: '/article/list' },
       hidden: true
     }
   ]

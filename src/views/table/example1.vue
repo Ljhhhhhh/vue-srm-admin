@@ -17,6 +17,7 @@
       :total="total"
       :page-request="listQuery"
       :loading="listLoading"
+      :show-export="false"
       @changePage="changePage"
     />
   </div>
@@ -37,7 +38,7 @@ export default {
       columns: [
         { type: 'index', label: '序号' },
         { prop: 'author', label: '作者' },
-        { prop: 'title', label: '标题' },
+        { prop: 'title', label: '标题', 'show-overflow-tooltip': true, width: 300 },
         { prop: 'image_uri', label: '封面', isImg: true },
         { prop: 'pageviews', label: '阅读量' },
         { prop: 'status', label: '当前状态', formatter: this.statusFormat },

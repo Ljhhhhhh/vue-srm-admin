@@ -50,14 +50,6 @@
           v-bind="setAttrs(column)"
         >
           <template slot-scope="scope">
-            <!-- <img
-              class="srm-table_img"
-              :src="scope.row[column.prop]"
-              :width="column.width || '120px'"
-              :height="column.height || 'auto'"
-              alt="img"
-              @click="imgClick(scope.row[column.prop], column.previewWidth)"
-            > -->
             <el-image
               class="srm-table_img"
               :style="{width: column.width || '120px', height: column.height || 'auto'}"
@@ -91,24 +83,21 @@
       </div>
       <el-pagination
         v-show="total > pageRequest.pageSize"
+        :page-sizes="pageSizes"
         class="pagination"
         background
-        layout="total, prev, pager, next "
+        :layout="layout"
         :total="total"
         :page-size="pageRequest.pageSize"
         :current-page.sync="pageRequest.page"
         @current-change="currentChange"
+        @size-change="sizeChange"
       />
     </div>
-    <!-- <image-preview
-      :width="previewWidth"
-      :current-img.sync="imgSrc"
-    /> -->
   </div>
 </template>
 <script>
 import Render from './render'
-// import ImagePreview from '@/components/ImagePreview'
 import { scrollTo } from '@/utils/scroll-to'
 
 export default {
@@ -165,17 +154,26 @@ export default {
     exportName: {
       type: String,
       default: document.title
+    },
+    pageSizes: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
       downloadLoading: false,
-      // 当前预览图片的地址
-      // imgSrc: '',
-      // 当前预览图片的宽度
-      // previewWidth: '50%',
       // 当前选择项的集合
       selections: []
+    }
+  },
+  computed: {
+    layout() {
+      const layout = ['total', 'prev', 'pager', 'next']
+      if (this.pageSizes.length) {
+        layout.push('sizes')
+      }
+      return layout.join(', ')
     }
   },
   watch: {
@@ -184,11 +182,6 @@ export default {
     }
   },
   methods: {
-    // 图片预览
-    // imgClick(src, previewWidth) {
-    //   this.imgSrc = src
-    //   this.previewWidth = previewWidth || '50%'
-    // },
     // 已选项
     selectionChange(selections) {
       this.selections = selections
@@ -201,6 +194,9 @@ export default {
     // 切换页面
     currentChange(page) {
       this.$emit('changePage', page)
+    },
+    sizeChange(size) {
+      this.$emit('changeSize', size)
     },
     setAttrs(params) {
       // eslint-disable-next-line

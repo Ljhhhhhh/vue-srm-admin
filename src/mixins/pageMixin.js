@@ -43,6 +43,9 @@ export default {
     changePage(page) {
       this.listQuery.page = page
     },
+    changeSize(size) {
+      this.listQuery.pageSize = size
+    },
     getList() {
       if (!this.fetchList || typeof this.fetchList !== 'function') {
         this.$message.error('请把列表接口函数赋值给fetchList')
@@ -51,6 +54,7 @@ export default {
       this.listLoading = true
       const query = this.$filterEmptyValue(this.listQuery, this.searchForm)
       this.fetchList(query).then(response => {
+        // 基于接口统一处理
         this.tableData = response.data.items
         this.total = response.data.total
         this.listLoading = false

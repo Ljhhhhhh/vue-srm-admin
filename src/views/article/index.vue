@@ -12,12 +12,14 @@
     />
     <srm-table
       :source-data="tableData"
-      :delete-visible="false"
       :columns="columns"
       :total="total"
       :page-request="listQuery"
       :loading="listLoading"
+      :page-sizes="[10, 25, 50]"
+      @handleBatchDelete="setItem($event, 'delete')"
       @changePage="changePage"
+      @changeSize="changeSize"
     >
       <el-button slot="buttons" type="success" icon="el-icon-plus" @click="setItem({}, 'create')">新增</el-button>
       <el-table-column slot="operation" label="操作" width="180" align="center">
@@ -119,7 +121,13 @@ export default {
       }
     },
     deleteItem(item) {
-      this.mixinHandleItem(deleteArticle, this.getList, item.id)
+      let id
+      if (Array.isArray(item)) {
+        id = item.map(v => v.id)
+      } else {
+        id = item.id
+      }
+      this.mixinHandleItem(deleteArticle, this.getList, id)
     }
   }
 }
