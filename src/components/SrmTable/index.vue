@@ -3,7 +3,7 @@
     <div class="handle-wrap">
       <slot name="buttons" />
       <el-button
-        v-if="showExport"
+        v-if="exportVisible"
         class="table-export_btn"
         :disabled="!selections.length"
         :loading="downloadLoading"
@@ -21,7 +21,7 @@
       @selection-change="selectionChange"
     >
       <el-table-column
-        v-if="!selectDisabled"
+        v-if="selectVisible"
         type="selection"
         width="45"
         align="center"
@@ -128,9 +128,9 @@ export default {
       default: false
     },
     // 是否可选择行
-    selectDisabled: {
+    selectVisible: {
       type: Boolean,
-      default: false
+      default: true
     },
     // 分页查询数据
     pageRequest: {
@@ -141,7 +141,7 @@ export default {
       })
     },
     // 是否可导出
-    showExport: {
+    exportVisible: {
       type: Boolean,
       default: true
     },
@@ -153,7 +153,7 @@ export default {
     // 导出文件默认名称
     exportName: {
       type: String,
-      default: document.title
+      default: ''
     },
     pageSizes: {
       type: Array,
@@ -222,7 +222,7 @@ export default {
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: this.exportName
+          filename: this.exportName || document.title
         })
         this.downloadLoading = false
       })

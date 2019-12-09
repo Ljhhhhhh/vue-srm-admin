@@ -1,9 +1,10 @@
 <template>
   <div>
     <srm-form
-      :inline="true"
+      v-model="mergeForm"
+      form-name="mergeForm"
+      :inline="false"
       :form-items="formItems"
-      :merge-form.sync="mergeForm"
       @submit="showTableData"
       @after-reset="getList"
     >
@@ -187,7 +188,8 @@ export default {
   },
   methods: {
     showTableData() {
-      console.log('showTableData')
+      this.$message.info('请在控制台查看当前表单值')
+      console.log({ ...this.mergeForm })
     },
     getList() {
       console.log('getList')

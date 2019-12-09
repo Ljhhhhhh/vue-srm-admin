@@ -59,6 +59,7 @@ export default {
         { prop: 'pageviews', label: '阅读量' },
         { prop: 'status', label: '当前状态', formatter: this.statusFormat },
         { prop: 'display_time', label: '发布时间' },
+        // 没有prop的列不会被导出
         { slot: 'operation', label: '操作' }
       ],
       queryColumns: [
