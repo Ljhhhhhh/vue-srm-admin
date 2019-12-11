@@ -1,22 +1,17 @@
 <template>
-  <div>
+  <div class="container">
     <srm-form
       v-model="mergeForm"
+      :rules="rules"
+      class="my-form"
       form-name="mergeForm"
       :inline="false"
       :form-items="formItems"
       @submit="showTableData"
       @after-reset="getList"
     >
-      <template v-slot:slotCheckBox>
-        <el-checkbox v-model="mergeForm.slotCheckBox">插槽复选框1</el-checkbox>
-      </template>
-      <template v-slot:upload>
-        <div>
-          <!-- <el-upload>
-            <div>++</div>
-          </el-upload> -->
-        </div>
+      <template v-slot:colorPicker>
+        <el-color-picker v-model="mergeForm.colorPicker" />
       </template>
     </srm-form>
   </div>
@@ -24,9 +19,8 @@
 <script>
 import SrmForm from '@/components/SrmForm'
 import { findItem } from '@/components/SrmForm/util'
-import { createArticle, fetchList } from '@/api/article'
 export default {
-  name: 'FormExample1',
+  name: 'FormExample',
   components: {
     SrmForm
   },
@@ -58,7 +52,6 @@ export default {
             placeholder: '请输入年龄'
           },
           ifRender(Model) {
-            // form为ZFrom的:model对象
             return Model.hobby === '2'
           }
         },
@@ -83,7 +76,8 @@ export default {
             label: '日期'
           },
           attrs: {
-            key: 'date'
+            key: 'date',
+            'value-format': 'yyyy-MM-dd'
           }
         },
         {
@@ -95,6 +89,16 @@ export default {
             value: '1',
             key: 'radio',
             options: [{ value: '1', label: '男' }, { value: '2', label: '女' }]
+          }
+        },
+        {
+          tag: 'upload',
+          itemAttrs: {
+            label: '文章封面',
+            col: 24
+          },
+          attrs: {
+            key: 'image_uri'
           }
         },
         {
@@ -146,21 +150,9 @@ export default {
           }
         },
         {
-          slot: 'slotCheckBox',
-          // attrs: {
-          //   key: 'slotCheckBox'
-          // },
+          slot: 'colorPicker',
           itemAttrs: {
-            label: '插槽复选框'
-          }
-        },
-        {
-          slot: 'upload',
-          // attrs: {
-          //   key: 'upload'
-          // },
-          itemAttrs: {
-            label: '上传图片'
+            label: '颜色选择器'
           }
         },
         {
@@ -182,9 +174,18 @@ export default {
           }
         }
       ],
-      createArticle,
+      rules: {
+        name: [
+          { required: true, message: '姓名必填' }
+        ]
+      },
       mergeForm: {}
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.getInfo()
+    })
   },
   methods: {
     showTableData() {
@@ -195,26 +196,20 @@ export default {
       console.log('getList')
     },
     async getInfo() {
-      try {
-        const [res1] = await Promise.all([fetchList()])
-        console.log(res1, 'res1')
-        const optionsList = res1.data.items.map(item => {
-          return {
-            value: item.id, label: '第' + item.title
-          }
-        })
-        // const [res1, res2] = await Promise.all([fetchList(), cascader()])
-        findItem(this.formItems, 'asyncRadio').attrs.options = optionsList
-        // this.findItem('cascader').attrs.options = res2.options
-      } catch (e) {
-        console.log(e)
-      }
+      const optionsList = [
+        { label: '选项一', value: 1 },
+        { label: '选项二', value: 2 },
+        { label: '选项三', value: 3 }
+      ]
+      findItem(this.formItems, 'asyncRadio').attrs.options = optionsList
     }
-    // findItem(key) {
-    //   return this.formItems.find(
-    //     formItem => formItem.attrs && formItem.attrs.key === key
-    //   )
-    // }
   }
 }
 </script>
+<style lang="scss" scoped>
+  .container{
+    .my-form{
+      width: 650px;
+    }
+  }
+</style>

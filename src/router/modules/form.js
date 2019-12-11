@@ -13,16 +13,10 @@ const formRouter = {
   },
   children: [
     {
-      path: 'example1',
-      component: () => import('@/views/form/example1'),
-      name: 'FormExample1',
-      meta: { title: '案例一' }
-    },
-    {
-      path: 'example2',
-      component: () => import('@/views/form/example2'),
-      name: 'FormExample2',
-      meta: { title: '案例二' }
+      path: 'example',
+      component: () => import('@/views/form/example'),
+      name: 'FormExample',
+      meta: { title: '高级表单' }
     }
   ]
 }

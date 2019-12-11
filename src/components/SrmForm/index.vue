@@ -250,4 +250,11 @@ export default {
   }
 }
 </script>
-
+<style lang="scss">
+  .el-select,
+  .el-date-editor.el-input,
+  .el-date-editor.el-input__inner,
+  .el-cascader {
+    width: 100%;
+  }
+</style>
