@@ -37,20 +37,7 @@ export default {
         { prop: 'pageviews', label: '阅读量' },
         // 使用render渲染时，如需导出功能，必须配合formatter格式化对应值
         { prop: 'status', label: '当前状态', formatter: this.statusFormat, render: (h, { row, column, index }) => {
-          let statusTag
-          switch (row.status) {
-            case 1:
-              statusTag = 'primary'
-              break
-            case 2:
-              statusTag = 'success'
-              break
-            case 3:
-              statusTag = 'danger'
-              break
-            default:
-              break
-          }
+          const statusTag = [null, 'primary', 'success', 'danger'][row.status]
           const statusName = statusMap.find(item => item.value === row.status).label
           return h('el-tag', {
             props: {
