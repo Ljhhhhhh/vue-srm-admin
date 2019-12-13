@@ -13,9 +13,5 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: false,
-  listQuery: {
-    page: 1,
-    pageSize: 10
-  }
+  sidebarLogo: false
 }

@@ -1,9 +1,12 @@
-import settings from '@/settings'
 import SrmDialogCheck from '@/components/SrmDialogCheck'
 export default {
   data() {
     return {
-      listQuery: { ...settings.listQuery }, // 扩展运算，以免影响settings中的值
+      // 页码及每页条数
+      listQuery: {
+        page: 1,
+        pageSize: 10
+      },
       total: 0, // 总条数
       listLoading: false, // 是否加载中
       fetchList: null, // 请求接口函数
@@ -21,6 +24,7 @@ export default {
       deep: true
     }
   },
+  // 激活时判断是否需要重新请求列表页
   activated() {
     if (this.$store.state.page.needRefreshRouteList.includes(this.$route.path)) {
       this.$store.commit('page/REMOVE_ROUTE', this.$route.path)
@@ -31,6 +35,7 @@ export default {
     this.getList()
   },
   methods: {
+    // 刷新
     refresh() {
       if (this.listQuery.page !== 1) {
         Object.assign(this.listQuery, {
@@ -40,12 +45,15 @@ export default {
         this.getList()
       }
     },
+    // 页码切换
     changePage(page) {
       this.listQuery.page = page
     },
+    // 每页条数切换
     changeSize(size) {
       this.listQuery.pageSize = size
     },
+    // 获取列表数据
     getList() {
       if (!this.fetchList || typeof this.fetchList !== 'function') {
         this.$message.error('请把列表接口函数赋值给fetchList')
