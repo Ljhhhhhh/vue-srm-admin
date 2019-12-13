@@ -245,6 +245,11 @@ export default {
         type: 'info'
       }).then(() => {
         this.$router.go(-1)
+        this.$store.dispatch('tagsView/delView', {
+          path: this.$route.path
+        })
+      }).catch(e => {
+        console.log(e)
       })
     }
   }
