@@ -36,6 +36,7 @@ export default {
   mixins: [detailMixin],
   data() {
     return {
+      titleById: false,
       detailForm: {
         title: '1234'
       }
@@ -52,7 +53,7 @@ export default {
       const { code, data } = await fetchArticle(this.id)
       if (code === 20000) {
         this.detailForm = data
-        // Object.assign(this.detailForm, data)
+        this.setTitle(this.detailForm.title)
       } else {
         this.$router.back()
       }

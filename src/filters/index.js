@@ -69,9 +69,11 @@ export function uppercaseFirst(string) {
 }
 
 export function formatTime(unix) {
-  return dayjs(unix).format('YYYY-MM-DD hh:mm:ss')
+  if (!unix) return '未知'
+  return dayjs(unix).format('YYYY-MM-DD HH:mm:ss')
 }
 
 export function formatDay(unix) {
+  if (!unix) return '未知'
   return dayjs(unix).format('YYYY-MM-DD')
 }

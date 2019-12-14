@@ -27,8 +27,8 @@ export default {
   // 激活时判断是否需要重新请求列表页
   activated() {
     if (this.$store.state.page.needRefreshRouteList.includes(this.$route.path)) {
-      this.$store.commit('page/REMOVE_ROUTE', this.$route.path)
       this.getList()
+      this.$store.commit('page/REMOVE_ROUTE', this.$route.path)
     }
   },
   mounted() {
