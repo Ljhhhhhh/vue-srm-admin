@@ -15,9 +15,9 @@
 
 ### `detailMixin`：详情页功能集成
 
-1. 根据`id`设置当前页的标题后缀：
+1. 根据`id`设置当前页的标题后缀：<br />
 ![title-by-id](http://img.cixi518.com/title-by-id.png)
-2. 自定义标题后缀：
+2. 自定义标题后缀：<br />
 ![title-by-id](http://img.cixi518.com/title-by-title.png)
 3. `goListWithRefresh`方法：标记需要刷新的页面，并根据参数判断是否需要立即返回。
 
