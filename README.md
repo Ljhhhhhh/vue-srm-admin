@@ -55,8 +55,8 @@
 | :------------ | ----------------------- |
 | buttons | 表格上方区域（一般用于展示按钮） |
 
-#### 代码演示
-![table-preview](http://img.cixi518.com/table-code.png)
+#### 使用示例
+[表格代码演示](https://github.com/Ljhhhhhh/vue-srm-admin/blob/master/src/views/table/example2.vue)
 
 ### `SrmForm`：配置式表单组件
 `SrmForm`基于配置生成表单，可快速完成详情页编辑、列表页筛选等功能。
@@ -90,8 +90,8 @@
 | :------------ | ----------------------- |
 | buttons | 表单下方区域（一般用于展示按钮） |
 
-#### 代码演示
-![form-preview](http://img.cixi518.com/form-code.png)
+#### 使用示例
+[表单代码演示](https://github.com/Ljhhhhhh/vue-srm-admin/blob/master/src/views/form/example.vue)
 
 ## `vue-srm-admin`源码必知
 1. [functional(函数化组件)](https://cn.vuejs.org/v2/api/#functional)
