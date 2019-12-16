@@ -1,7 +1,7 @@
 # 升级vue-element-admin，高效开发后台管理系统
 ## 前言
 [vue-element-admin](https://panjiachen.gitee.io/vue-element-admin-site/zh/)作为一个后台前端解决方案，它丰富的插件、优雅的解决方案无需多言。然而在企业级中后台产品的开发中，我们最常遇到的需求就是列表页、详情页。`vue-element-admin`的解决方案是直接使用`element-ui`的`el-table/el-form`实现了需求。**由于列表页、详情页有很多的需求是相近甚至相同的**，在这样的前提下， 我考虑是不是能基于`vue-element-admin`打造更高效的中后台解决方案呢，于是有了`vue-srm-admin`。
-** 项目源码、案例展示、源码必知在文章末尾，请查收 **
+**项目源码、案例展示、源码必知在文章末尾，请查收。**
 ## `vue-srm-admin`做了什么
 
 ### `pageMixin`：列表页功能集成
