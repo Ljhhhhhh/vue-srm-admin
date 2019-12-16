@@ -155,6 +155,7 @@ export default {
       type: String,
       default: ''
     },
+    // 每页条数选择器
     pageSizes: {
       type: Array,
       default: () => []

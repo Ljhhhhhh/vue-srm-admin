@@ -78,6 +78,14 @@ export default {
       type: Array,
       required: true
     },
+    formName: {
+      type: String,
+      required: true
+    },
+    inline: {
+      type: Boolean,
+      default: false
+    },
     submitMsg: {
       type: [Boolean, String],
       default: '提交'
@@ -95,10 +103,6 @@ export default {
     //   type: Object,
     //   default: () => {}
     // },
-    formName: {
-      type: String,
-      required: true
-    },
     size: {
       type: String,
       default: 'small'
@@ -138,9 +142,6 @@ export default {
     },
     showMessage() {
       return this.$attrs['show-message'] !== false
-    },
-    inline() {
-      return this.$attrs.inline !== false
     }
   },
   watch: {
