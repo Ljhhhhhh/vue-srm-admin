@@ -106,7 +106,7 @@
 10. [$attrs](https://cn.vuejs.org/v2/api/#vm-attrs)
 
 ## 项目展示
-[项目源码](https://github.com/Ljhhhhhh/vue-vue-srm-admin)
+[项目源码](https://github.com/Ljhhhhhh/vue-srm-admin)
 [项目预览](http://vue-erp.cixi518.com)
 
 ## 总结
