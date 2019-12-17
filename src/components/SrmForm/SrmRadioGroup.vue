@@ -4,6 +4,7 @@
       v-for="item in $attrs.options"
       :key="item.value"
       :label="item.value"
+      :disabled="item.disabled"
     >
       {{ item.label }}
     </el-radio>
