@@ -6,9 +6,9 @@ const state = {
 
 const mutations = {
   ADD_ROUTE: (state, route) => {
+    router.replace(route)
     if (state.needRefreshRouteList.includes(route)) return
     state.needRefreshRouteList.push(route)
-    router.replace(route)
   },
   REMOVE_ROUTE: (state, route) => {
     state.needRefreshRouteList = state.needRefreshRouteList.filter(v => v !== route)
