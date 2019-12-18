@@ -8,6 +8,7 @@
       :page-request="listQuery"
       :loading="listLoading"
       @changePage="changePage"
+      @changeSize="changeSize"
       @handleBatchDelete="setItems"
     />
     <srm-dialog-check
